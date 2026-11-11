@@ -7,7 +7,7 @@ import java.util.List;
 public final class BookingModels {
     private BookingModels() {}
 
-    public record MovieOption(String maPhim, String tenPhim, Integer thoiLuong, LocalDate ngayKhoiChieu) {}
+    public record MovieOption(String maPhim, String tenPhim, Integer thoiLuong, LocalDate ngayKhoiChieu, String theLoai) {}
 
     public record ShowtimeOption(
             String maSuatChieu,
@@ -36,6 +36,8 @@ public final class BookingModels {
 
     public record ProductOrder(String maSanPham, int soLuong) {}
 
+    public record TicketCode(String maVe, String maGhe) {}
+
     public record BookingReceipt(
             String maHoaDon,
             String tenPhim,
@@ -53,7 +55,8 @@ public final class BookingModels {
             String maThamChieuChuyenKhoan,
             LocalDateTime hetHanThanhToan,
             String qrImageUrl,
-            String nganHang
+            String nganHang,
+            List<TicketCode> ve
     ) {}
 
     public record PaymentConfiguration(

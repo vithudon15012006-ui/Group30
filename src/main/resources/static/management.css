@@ -1,0 +1,38 @@
+* { box-sizing: border-box; }
+body { margin: 0; background: #f4f5f8; color: #20242a; font: 16px Arial, sans-serif; }
+main { max-width: 1140px; margin: 34px auto; padding: 0 20px; }
+header { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+header img { object-fit: contain; flex-shrink: 0; }
+h1 { font-size: clamp(23px, 4vw, 32px); margin: 0 0 5px; }
+header p { margin: 0; color: #555e68; }
+section { background: white; padding: 18px; border-radius: 10px; box-shadow: 0 2px 12px #0000000b; }
+h2 { margin: 14px 0; font-size: 24px; }
+.toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 9px; }
+.toolbar label { font-weight: bold; }
+input, select, button { border: 1px solid #c7cbd0; border-radius: 5px; min-height: 36px; padding: 7px 10px; font: inherit; }
+input, select { background: #fff; min-width: 0; }
+#search { width: min(300px, 100%); }
+button { background: #f0f1f2; cursor: pointer; }
+button:hover:not(:disabled) { background: #e6e8eb; }
+button:disabled { opacity: .5; cursor: default; }
+:focus-visible { outline: 2px solid #8a1630; outline-offset: 2px; }
+.fields { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px 14px; margin: 12px 0; }
+.fields label { display: grid; gap: 4px; font-size: 14px; }
+.message { margin: 10px 0; min-height: 18px; font-size: 14px; color: #545e69; }
+.message.error, .delete { color: #a9142e; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th, td { padding: 9px; border: 1px solid #d9dce0; text-align: left; }
+th { background: #f0f1f3; }
+td.actions { white-space: nowrap; }
+td.actions button { min-height: 32px; font-size: 14px; margin-right: 5px; }
+.pagination { justify-content: flex-end; margin: 12px 0 0; }
+dialog { border: 1px solid #c7cbd0; border-radius: 8px; width: min(620px, calc(100vw - 28px)); max-height: 85vh; padding: 18px; }
+dialog::backdrop { background: #161c2866; backdrop-filter: blur(3px); }
+dialog .toolbar { justify-content: space-between; }
+dialog .dialog-actions { justify-content: flex-end; margin: 14px 0 0; }
+dialog h2 { margin-top: 0; }
+#delete-dialog { width: min(460px, calc(100vw - 28px)); }
+button.danger, button.danger:hover:not(:disabled) { color: white; background: #a9142e; border-color: #a9142e; }
+[hidden] { display: none !important; }
+@media (max-width: 580px) { main { margin-top: 20px; padding: 0 12px; } section { padding: 12px; } .fields { grid-template-columns: 1fr; } }
