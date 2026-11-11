@@ -59,7 +59,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/dat-ve").hasRole("CUSTOMER")
                         .requestMatchers("/api/account/**").hasRole("CUSTOMER")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/phim/**", "/api/khach-hang/**").hasAnyRole("STAFF", "ADMIN")
+                        .requestMatchers("/api/phim/**", "/api/khach-hang/**", "/api/danh-muc/**").hasAnyRole("STAFF", "ADMIN")
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll())
                 .exceptionHandling(errors -> errors

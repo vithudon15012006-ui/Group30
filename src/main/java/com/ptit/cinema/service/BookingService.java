@@ -8,6 +8,7 @@ import com.ptit.cinema.model.BookingModels.ProductOption;
 import com.ptit.cinema.model.BookingModels.ProductOrder;
 import com.ptit.cinema.model.BookingModels.SeatOption;
 import com.ptit.cinema.model.BookingModels.ShowtimeOption;
+import com.ptit.cinema.model.BookingModels.TicketCode;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,7 +46,9 @@ public class BookingService {
 
     public List<MovieOption> movies() {
         return jdbc.query("""
-                SELECT DISTINCT P.MaPhim, P.TenPhim, P.ThoiLuong, P.NgayKhoiChieu
+                SELECT DISTINCT P.MaPhim, P.TenPhim, P.ThoiLuong, P.NgayKhoiChieu,
+                    (SELECT GROUP_CONCAT(T.TheLoai ORDER BY T.TheLoai SEPARATOR ' · ')
+                     FROM TheLoaiPhim T WHERE T.MaPhim = P.MaPhim) AS TheLoai
                 FROM Phim P
                 JOIN SuatChieu SC ON SC.MaPhim = P.MaPhim
                 ORDER BY P.TenPhim
@@ -53,7 +56,8 @@ public class BookingService {
                 rs.getString("MaPhim"),
                 rs.getString("TenPhim"),
                 (Integer) rs.getObject("ThoiLuong"),
-                rs.getDate("NgayKhoiChieu") == null ? null : rs.getDate("NgayKhoiChieu").toLocalDate()
+                rs.getDate("NgayKhoiChieu") == null ? null : rs.getDate("NgayKhoiChieu").toLocalDate(),
+                rs.getString("TheLoai")
         ));
     }
 
@@ -283,6 +287,7 @@ public class BookingService {
                 """, invoiceId, request.hinhThucThanhToan(), bankTransfer ? "PENDING" : "PAID",
                 paymentReference, total, bankTransfer ? null : LocalDateTime.now(), expiresAt, customer.id());
 
+        List<TicketCode> tickets = new ArrayList<>();
         for (String seat : seats) {
             try {
                 jdbc.update("""
@@ -295,7 +300,8 @@ public class BookingService {
                             VALUES (?, ?, ?, ?, ?)
                             """, request.maSuatChieu(), seat, showtime.maPhong(), invoiceId, expiresAt);
                 } else {
-                    insertTicket(invoiceId, employeeId, request.maSuatChieu(), seat, showtime.maPhong(), seatPrices.get(seat));
+                    String ticketId = insertTicket(invoiceId, employeeId, request.maSuatChieu(), seat, showtime.maPhong(), seatPrices.get(seat));
+                    tickets.add(new TicketCode(ticketId, seat));
                 }
             } catch (DuplicateKeyException exception) {
                 throw new SeatAlreadyBookedException(
@@ -327,16 +333,19 @@ public class BookingService {
                 paymentReference,
                 expiresAt,
                 bankTransfer ? vietQr.imageUrl() : null,
-                bankTransfer ? vietQr.bankName() : null
+                bankTransfer ? vietQr.bankName() : null,
+                tickets
         );
     }
 
-    void insertTicket(String invoiceId, String employeeId, String showtimeId, String seat, String roomId, int price) {
+    String insertTicket(String invoiceId, String employeeId, String showtimeId, String seat, String roomId, int price) {
+        String ticketId = "VE" + UUID.randomUUID().toString().replace("-", "");
         jdbc.update("""
                 INSERT INTO Ve (MaVe, Gia, MaNVBanve, MaSuatChieu, MaHoaDon, MaGhe, MaPhong)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
-                """, "VE" + UUID.randomUUID().toString().replace("-", ""),
+                """, ticketId,
                 price, employeeId, showtimeId, invoiceId, seat, roomId);
+        return ticketId;
     }
 
     private String roomForShowtime(String showtimeId) {

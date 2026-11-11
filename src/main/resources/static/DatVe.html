@@ -3,464 +3,62 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#11131b">
-  <title>PTIT Cinema | Đặt vé</title>
-  <link rel="stylesheet" href="/ui-preferences.css">
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #11131b;
-      --surface: #1a1d28;
-      --raised: #202431;
-      --border: #303545;
-      --text: #f4f4f6;
-      --muted: #a5a9b8;
-      --accent: #f5b942;
-      --green: #68d6a0;
-      --red: #ff737e;
-      font-family: Inter, "Segoe UI", Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-    }
-    * { box-sizing: border-box; }
-    body {
-      min-width: 320px;
-      margin: 0;
-      background: radial-gradient(ellipse at 85% -15%, rgb(130 37 49 / 26%), transparent 42rem), var(--bg);
-    }
-    button, input, select { font: inherit; }
-    button, select { cursor: pointer; }
-    button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible { outline: 3px solid rgb(245 185 66 / 60%); outline-offset: 2px; }
-    .shell { width: min(1080px, calc(100% - 36px)); margin: 0 auto; }
-    .topbar { display: flex; align-items: center; justify-content: space-between; min-height: 74px; border-bottom: 1px solid rgb(255 255 255 / 8%); }
-    .brand { display: flex; align-items: center; gap: 12px; font-weight: 750; }
-    .brand-mark { display: grid; width: 38px; height: 38px; place-items: center; border-radius: 12px; background: var(--accent); color: #19140a; }
-    .brand small { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; }
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .hero { padding: 38px 0 24px; }
-    .eyebrow { margin: 0 0 9px; color: var(--accent); font-size: 12px; font-weight: 750; letter-spacing: .16em; text-transform: uppercase; }
-    h1 { margin: 0; font-size: clamp(28px, 4vw, 40px); letter-spacing: -.035em; }
-    .intro { max-width: 720px; margin: 11px 0 0; color: var(--muted); line-height: 1.6; }
-    .demo-note, .notice { margin: 0 0 18px; padding: 13px 15px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--muted); line-height: 1.5; }
-    .notice { display: none; color: var(--text); }
-    .notice[data-kind="error"] { border-color: rgb(255 115 126 / 45%); color: #ffdce0; }
-    .notice[data-kind="success"] { border-color: rgb(104 214 160 / 45%); color: #d7ffea; }
-    .steps { display: grid; gap: 16px; padding: 0 0 45px; }
-    .panel { overflow: hidden; border: 1px solid var(--border); border-radius: 16px; background: linear-gradient(145deg, rgb(255 255 255 / 2%), transparent 38%), var(--surface); box-shadow: 0 18px 50px rgb(0 0 0 / 14%); }
-    .panel-head { display: flex; align-items: center; gap: 12px; padding: 18px 21px; border-bottom: 1px solid var(--border); }
-    .step-number { display: grid; width: 32px; height: 32px; flex: 0 0 auto; place-items: center; border-radius: 10px; background: rgb(245 185 66 / 13%); color: var(--accent); font-weight: 800; }
-    h2 { margin: 0; font-size: 17px; }
-    .subtitle { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
-    .panel-body { padding: 20px 21px; }
-    .field { display: grid; gap: 7px; }
-    .field label { color: #d5d7df; font-size: 12px; font-weight: 650; }
-    input, select { width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: #131620; color: var(--text); }
-    input::placeholder { color: #777d8e; }
-    .selection-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
-    .showtime { padding: 13px; border: 1px solid var(--border); border-radius: 12px; background: #171a24; color: var(--text); text-align: left; }
-    .showtime:hover { border-color: #777d8e; }
-    .showtime[aria-pressed="true"] { border-color: var(--accent); background: rgb(245 185 66 / 9%); box-shadow: inset 0 0 0 1px var(--accent); }
-    .showtime strong { display: block; margin-bottom: 5px; color: var(--accent); font-size: 16px; }
-    .showtime span { display: block; color: var(--muted); font-size: 12px; line-height: 1.5; }
-    .empty { color: var(--muted); text-align: center; }
-    .screen { width: min(520px, 100%); margin: 0 auto 24px; padding: 10px; border-top: 3px solid var(--accent); border-radius: 50% 50% 0 0 / 20% 20% 0 0; color: var(--muted); font-size: 11px; letter-spacing: .3em; text-align: center; }
-    .seat-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin: 0 0 16px; color: var(--muted); font-size: 12px; }
-    .legend-item { display: inline-flex; align-items: center; gap: 6px; }
-    .dot { width: 13px; height: 13px; border: 1px solid #62687a; border-radius: 4px; background: #242836; }
-    .dot.selected { border-color: var(--accent); background: var(--accent); }
-    .dot.booked { border-color: #5a3038; background: #5a3038; }
-    .seat-grid { display: grid; justify-content: center; gap: 9px; }
-    .seat-row { display: flex; align-items: center; gap: 8px; }
-    .row-label { width: 20px; color: var(--muted); font-size: 12px; text-align: center; }
-    .seat { width: 44px; min-height: 38px; border: 1px solid #51586b; border-radius: 9px 9px 5px 5px; background: #242836; color: var(--text); font-size: 11px; }
-    .seat:hover:not(:disabled) { border-color: var(--accent); }
-    .seat[data-selected="true"] { border-color: var(--accent); background: var(--accent); color: #21190a; font-weight: 800; }
-    .seat[data-vip="true"] { border-style: dashed; }
-    .seat:disabled { border-color: #5a3038; background: #5a3038; color: #d49aa0; cursor: not-allowed; }
-    .selected-summary { margin: 14px 0 0; color: var(--muted); font-size: 13px; text-align: center; }
-    .food-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
-    .food-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px; border: 1px solid var(--border); border-radius: 12px; background: #171a24; }
-    .food-item strong { display: block; }
-    .food-item small { color: var(--muted); }
-    .quantity { display: flex; align-items: center; gap: 9px; }
-    .quantity button { width: 30px; height: 30px; border: 1px solid var(--border); border-radius: 8px; background: var(--raised); color: var(--text); }
-    .quantity output { min-width: 18px; text-align: center; }
-    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-    .form-grid .field:last-child { grid-column: 1 / -1; }
-    .pay-options { display: flex; flex-wrap: wrap; gap: 10px; }
-    .pay-option { display: flex; align-items: center; gap: 8px; padding: 11px 13px; border: 1px solid var(--border); border-radius: 10px; color: var(--text); }
-    .pay-option input { width: auto; min-height: 0; accent-color: var(--accent); }
-    .payment-note { margin: 12px 0 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
-    .checkout { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 18px; padding: 18px 21px; border-top: 1px solid var(--border); }
-    .total-label { color: var(--muted); font-size: 12px; }
-    .total { display: block; margin-top: 3px; color: var(--accent); font-size: 24px; font-weight: 800; }
-    .button { min-height: 44px; padding: 10px 17px; border: 0; border-radius: 10px; background: var(--accent); color: #21190a; font-weight: 800; }
-    .button:hover { background: #ffd477; }
-    .button:disabled { cursor: wait; opacity: .55; }
-    .receipt { display: none; margin: 0 0 20px; padding: 18px; border: 1px solid rgb(104 214 160 / 45%); border-radius: 14px; background: rgb(104 214 160 / 8%); line-height: 1.7; }
-    .receipt h2 { color: var(--green); }
-    .receipt .total { font-size: 20px; }
-    .receipt[data-pending="true"] { border-color: rgb(245 185 66 / 50%); background: rgb(245 185 66 / 7%); }
-    .receipt[data-pending="true"] h2 { color: var(--accent); }
-    .qr-payment { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); }
-    .qr-payment img { width: min(280px, 100%); height: auto; padding: 8px; border-radius: 10px; background: #fff; }
-    .qr-details { min-width: 220px; }
-    .qr-details strong { color: var(--accent); }
-    .footer { padding: 0 0 25px; color: #777d8e; font-size: 12px; text-align: center; }
-    @media (max-width: 600px) {
-      .shell { width: calc(100% - 24px); }
-      .hero { padding-top: 30px; }
-      .panel-head, .panel-body { padding: 16px; }
-      .seat { width: 38px; }
-      .checkout { grid-template-columns: 1fr; }
-      .checkout .button { width: 100%; }
-    }
-  </style>
+  <title>Đặt vé phim | PTIT Cinema</title>
+  <link rel="icon" href="/ptit-logo.png">
+  <link rel="stylesheet" href="/booking.css">
+  <script src="/booking.js" defer></script>
 </head>
 <body>
-  <header class="shell topbar">
-    <div class="brand">
-      <span class="brand-mark" aria-hidden="true">P</span>
-      <span>PTIT Cinema<small>Đặt vé · Nhóm 30</small></span>
-    </div>
-    <div style="display:flex;gap:14px;align-items:center">
-      <a href="/TaiKhoan.html">Tài khoản</a>
-      <button id="logout-button" class="button" type="button" style="min-height:36px;padding:7px 11px">Đăng xuất</button>
-    </div>
-  </header>
-  <main class="shell">
-    <section class="hero">
-      <p class="eyebrow">Trải nghiệm điện ảnh của bạn</p>
-      <h1>Đặt vé xem phim</h1>
-      <p class="intro">Chọn phim, suất chiếu, ghế ngồi và món ăn yêu thích. Kiểm tra thông tin trước khi xác nhận đơn.</p>
+  <header class="mast"><div class="container brand"><img src="/ptit-logo.png" width="46" height="46" alt="Logo PTIT"><div><strong>PTIT Cinema</strong><small>Nhóm 30</small></div>
+    <nav class="booking-nav" aria-label="Tài khoản"><a id="account-link" href="/DangNhap.html?next=%2FDatVe.html">Đăng nhập</a><button id="logout" type="button" hidden>Đăng xuất</button></nav>
+  </div></header>
+  <main class="container">
+    <div class="intro"><h1>Đặt vé xem phim</h1></div>
+    <p id="notice" role="status" aria-live="polite" hidden></p>
+    <section id="movies" class="panel">
+      <div class="panel-head"><h2>Phim có suất chiếu</h2><input type="search" id="movie-search" aria-label="Tìm phim" placeholder="Tìm theo tên phim…"></div>
+      <div id="movie-list" class="movies"></div>
     </section>
-    <div class="demo-note" id="demo-note">Chuyển khoản QR cần admin đối soát thủ công; hệ thống không tự nhận thông báo từ ngân hàng. Ngày chiếu được lấy trực tiếp từ dữ liệu trong cơ sở dữ liệu.</div>
-    <div id="notice" class="notice" role="status" aria-live="polite"></div>
-    <section id="receipt" class="receipt" aria-live="polite"></section>
-    <div class="steps">
-      <section class="panel">
-        <div class="panel-head"><span class="step-number">1</span><div><h2>Chọn phim và suất chiếu</h2><p class="subtitle">Chọn một suất để xem sơ đồ ghế</p></div></div>
-        <div class="panel-body">
-          <div class="field" style="max-width:440px;margin-bottom:16px">
-            <label for="movie-select">Phim</label>
-            <select id="movie-select"><option value="">Đang tải danh sách phim…</option></select>
-          </div>
-          <div id="showtimes" class="selection-grid"><p class="empty">Đang tải suất chiếu…</p></div>
-        </div>
-      </section>
-      <section class="panel">
-        <div class="panel-head"><span class="step-number">2</span><div><h2>Chọn ghế</h2><p class="subtitle">Ghế đã đặt sẽ không thể chọn</p></div></div>
-        <div class="panel-body">
+    <section id="shows" class="panel" hidden>
+      <button type="button" class="link" id="back-movies">← Tất cả phim</button>
+      <div class="panel-head"><div><h2 id="show-title"></h2></div><label>Ngày chiếu <select id="show-date"></select></label></div>
+      <div id="show-list" class="shows"></div>
+    </section>
+    <section id="seats" class="panel" hidden>
+      <button type="button" class="link" id="back-shows">← Chọn suất khác</button>
+      <div class="panel-head"><div><h2>Chọn ghế</h2><p id="seat-show"></p></div><button id="reload-seats" type="button" class="secondary">Cập nhật ghế</button></div>
+      <div class="seat-layout">
+        <div>
           <div class="screen">MÀN HÌNH</div>
-          <div class="seat-legend">
-            <span class="legend-item"><i class="dot"></i> Còn trống</span>
-            <span class="legend-item"><i class="dot selected"></i> Đang chọn</span>
-            <span class="legend-item"><i class="dot booked"></i> Đã đặt</span>
-            <span class="legend-item">Ghế VIP có viền nét đứt</span>
-          </div>
-          <div id="seat-grid" class="seat-grid"><p class="empty">Vui lòng chọn suất chiếu trước.</p></div>
-          <p id="selected-seats" class="selected-summary">Chưa chọn ghế</p>
+          <div id="seat-map" aria-label="Sơ đồ ghế"></div>
+          <div class="legend"><span><i></i>Ghế thường</span><span><i class="vip"></i>VIP</span><span><i class="chosen"></i>Đang chọn</span><span><i class="sold"></i>Đã bán</span></div>
         </div>
-      </section>
-      <section class="panel">
-        <div class="panel-head"><span class="step-number">3</span><div><h2>Đồ ăn và thức uống</h2><p class="subtitle">Không bắt buộc · Có thể bỏ qua</p></div></div>
-        <div class="panel-body"><div id="food-grid" class="food-grid"><p class="empty">Đang tải thực đơn…</p></div></div>
-      </section>
-      <section class="panel">
-        <div class="panel-head"><span class="step-number">4</span><div><h2>Thông tin và thanh toán</h2><p class="subtitle">Nhập thông tin để ghi nhận hóa đơn</p></div></div>
-        <div class="panel-body">
-          <div class="demo-note" id="customer-summary">Đang kiểm tra tài khoản…</div>
-          <div class="field" style="margin-top:18px">
-            <span class="field label">Phương thức thanh toán</span>
-            <div class="pay-options">
-              <label class="pay-option"><input id="payment-transfer" type="radio" name="payment" value="Chuyển khoản"> Quét QR chuyển khoản</label>
-              <label class="pay-option"><input type="radio" name="payment" value="Tiền mặt"> Tiền mặt tại quầy</label>
-            </div>
-          </div>
-          <p class="payment-note" id="payment-note">Chuyển khoản tạo đơn chờ admin xác nhận sau khi tiền đã vào tài khoản. Vé chỉ được xác nhận sau đối soát.</p>
-        </div>
-        <div class="checkout">
-          <div><span class="total-label">Tổng thanh toán</span><strong id="grand-total" class="total">0&nbsp;₫</strong></div>
-          <button id="book-button" class="button" type="button">Xác nhận đặt vé</button>
-        </div>
-      </section>
-    </div>
+        <aside class="cart" aria-label="Thông tin đặt vé">
+          <h3>Vé của bạn</h3><p id="seat-selection">Chưa chọn ghế</p>
+          <div class="total"><span>Tạm tính</span><strong id="seat-total">0 ₫</strong></div>
+          <button class="primary" type="button" id="checkout" disabled>Tiếp tục</button>
+        </aside>
+      </div>
+    </section>
   </main>
-  <footer class="shell footer">PTIT Cinema · Hệ thống đặt vé minh họa</footer>
-  <script>
-    const money = value => new Intl.NumberFormat('vi-VN').format(value) + ' ₫';
-    const state = { movies: [], showtimes: [], selectedShowtime: null, seats: [], selectedSeats: new Set(), products: [], quantities: new Map() };
-    const $ = selector => document.querySelector(selector);
-    let csrfData = null;
-    let paymentConfig = null;
-    let paymentCountdown = null;
-
-    async function api(url, options) {
-      const requestOptions = { ...options, headers: { ...(options?.headers || {}) } };
-      if (requestOptions.method && requestOptions.method.toUpperCase() !== 'GET') {
-        csrfData ||= await fetch('/api/auth/csrf').then(response => response.json());
-        requestOptions.headers[csrfData.headerName] = csrfData.token;
-      }
-      const response = await fetch(url, requestOptions);
-      const result = response.status === 204 ? null : await response.json();
-      if (!response.ok) throw new Error(result?.message || 'Không thể hoàn tất yêu cầu. Vui lòng thử lại.');
-      return result;
-    }
-
-    function notice(message, kind = 'error') {
-      const element = $('#notice');
-      element.textContent = message;
-      element.dataset.kind = kind;
-      element.style.display = 'block';
-      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-
-    function clearNotice() {
-      $('#notice').style.display = 'none';
-      $('#notice').textContent = '';
-    }
-
-    async function loadMovies() {
-      state.movies = await api('/api/dat-ve/phim');
-      const select = $('#movie-select');
-      select.innerHTML = '<option value="">Chọn phim</option>' + state.movies.map(movie =>
-        `<option value="${escapeHtml(movie.maPhim)}">${escapeHtml(movie.tenPhim)}${movie.thoiLuong ? ` · ${movie.thoiLuong} phút` : ''}</option>`
-      ).join('');
-      if (state.movies.length === 0) $('#showtimes').innerHTML = '<p class="empty">Chưa có phim được xếp suất chiếu.</p>';
-    }
-
-    async function loadShowtimes(movieId) {
-      state.selectedShowtime = null;
-      state.selectedSeats.clear();
-      state.seats = [];
-      renderSeats();
-      const query = movieId ? `?maPhim=${encodeURIComponent(movieId)}` : '';
-      state.showtimes = await api(`/api/dat-ve/suat-chieu${query}`);
-      const host = $('#showtimes');
-      if (!state.showtimes.length) {
-        host.innerHTML = '<p class="empty">Phim này hiện chưa có suất chiếu.</p>';
-        return;
-      }
-      host.innerHTML = state.showtimes.map(showtime => `
-        <button class="showtime" type="button" data-showtime="${escapeHtml(showtime.maSuatChieu)}" aria-pressed="false">
-          <strong>${escapeHtml(showtime.gioBatDau)} · ${formatDate(showtime.ngayChieu)}</strong>
-          <span>${escapeHtml(showtime.tenPhim)} · ${escapeHtml(showtime.tenPhong || showtime.maPhong)}${showtime.loaiPhong ? ` (${escapeHtml(showtime.loaiPhong)})` : ''}</span>
-          <span>${showtime.soGheDaDat}/${showtime.sucChua} ghế đã đặt</span>
-        </button>`).join('');
-    }
-
-    async function selectShowtime(id) {
-      clearNotice();
-      state.selectedShowtime = state.showtimes.find(item => item.maSuatChieu === id);
-      state.selectedSeats.clear();
-      document.querySelectorAll('.showtime').forEach(button => {
-        button.setAttribute('aria-pressed', String(button.dataset.showtime === id));
-      });
-      state.seats = await api(`/api/dat-ve/suat-chieu/${encodeURIComponent(id)}/ghe`);
-      renderSeats();
-    }
-
-    function renderSeats() {
-      const grid = $('#seat-grid');
-      if (!state.selectedShowtime) {
-        grid.innerHTML = '<p class="empty">Vui lòng chọn suất chiếu trước.</p>';
-        updateTotals();
-        return;
-      }
-      const rows = new Map();
-      for (const seat of state.seats) {
-        if (!rows.has(seat.hangGhe)) rows.set(seat.hangGhe, []);
-        rows.get(seat.hangGhe).push(seat);
-      }
-      grid.innerHTML = [...rows.entries()].map(([row, seats]) => `
-        <div class="seat-row"><span class="row-label">${escapeHtml(row)}</span>${seats.map(seat => `
-          <button class="seat" type="button" data-seat="${escapeHtml(seat.maGhe)}" data-selected="${state.selectedSeats.has(seat.maGhe)}"
-            data-vip="${String(seat.loaiGhe?.toUpperCase() === 'VIP')}" aria-label="Ghế ${escapeHtml(seat.maGhe)}, ${seat.loaiGhe === 'VIP' ? 'VIP' : 'thường'}, ${money(seat.gia)}"
-            title="${escapeHtml(seat.loaiGhe)} · ${money(seat.gia)}" ${seat.daDat ? 'disabled aria-label="Ghế đã được đặt"' : ''}>
-            ${escapeHtml(seat.maGhe)}
-          </button>`).join('')}</div>`).join('');
-      updateSeatSummary();
-      updateTotals();
-    }
-
-    async function loadProducts() {
-      state.products = await api('/api/dat-ve/do-an');
-      $('#food-grid').innerHTML = state.products.length ? state.products.map(product => `
-        <div class="food-item">
-          <div><strong>${escapeHtml(product.tenSanPham)}</strong><small>${money(product.gia)}</small></div>
-          <div class="quantity" aria-label="${escapeHtml(product.tenSanPham)}">
-            <button type="button" data-quantity="${escapeHtml(product.maSanPham)}" data-change="-1" aria-label="Giảm số lượng">−</button>
-            <output id="qty-${escapeHtml(product.maSanPham)}">0</output>
-            <button type="button" data-quantity="${escapeHtml(product.maSanPham)}" data-change="1" aria-label="Tăng số lượng">+</button>
-          </div>
-        </div>`).join('') : '<p class="empty">Chưa có sản phẩm trong thực đơn.</p>';
-    }
-
-    function updateSeatSummary() {
-      const selected = [...state.selectedSeats];
-      const labels = selected.map(id => {
-        const seat = state.seats.find(item => item.maGhe === id);
-        return `${id} (${money(seat.gia)})`;
-      });
-      $('#selected-seats').textContent = labels.length ? `Đã chọn ${labels.length}/10 ghế: ${labels.join(', ')}` : 'Chưa chọn ghế';
-    }
-
-    function updateTotals() {
-      const seatTotal = state.seats.filter(seat => state.selectedSeats.has(seat.maGhe)).reduce((sum, seat) => sum + seat.gia, 0);
-      const foodTotal = state.products.reduce((sum, product) => sum + product.gia * (state.quantities.get(product.maSanPham) || 0), 0);
-      $('#grand-total').textContent = money(seatTotal + foodTotal);
-    }
-
-    function formatDate(value) {
-      const date = new Date(`${value}T00:00:00`);
-      return new Intl.DateTimeFormat('vi-VN', { weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric' }).format(date);
-    }
-
-    function escapeHtml(value) {
-      return String(value ?? '').replace(/[&<>"']/g, char => ({
-        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-      })[char]);
-    }
-
-    async function submitBooking() {
-      clearNotice();
-      if (!state.selectedShowtime) throw new Error('Vui lòng chọn suất chiếu.');
-      if (!state.selectedSeats.size) throw new Error('Vui lòng chọn ít nhất một ghế.');
-      const button = $('#book-button');
-      button.disabled = true;
-      button.textContent = 'Đang ghi nhận đơn…';
-      try {
-        const receipt = await api('/api/dat-ve', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            maSuatChieu: state.selectedShowtime.maSuatChieu,
-            ghe: [...state.selectedSeats],
-            sanPham: state.products.filter(product => state.quantities.get(product.maSanPham) > 0)
-              .map(product => ({ maSanPham: product.maSanPham, soLuong: state.quantities.get(product.maSanPham) })),
-            hinhThucThanhToan: document.querySelector('input[name="payment"]:checked').value
-          })
-        });
-        showReceipt(receipt);
-        state.selectedSeats.clear();
-        state.quantities.clear();
-        state.products.forEach(product => { const output = $(`#qty-${CSS.escape(product.maSanPham)}`); if (output) output.value = '0'; });
-        await loadShowtimes($('#movie-select').value);
-        $('#receipt').scrollIntoView({ behavior: 'smooth', block: 'center' });
-      } finally {
-        button.disabled = false;
-        button.textContent = 'Xác nhận đặt vé';
-      }
-    }
-
-    function showReceipt(receipt) {
-      const element = $('#receipt');
-      const pending = receipt.trangThaiThanhToan === 'PENDING';
-      if (paymentCountdown) window.clearInterval(paymentCountdown);
-      element.innerHTML = `
-        <h2>${pending ? 'Đơn đang chờ thanh toán' : 'Đặt vé thành công'} · Mã hóa đơn ${escapeHtml(receipt.maHoaDon)}</h2>
-        <div>${escapeHtml(receipt.tenPhim)} · ${escapeHtml(receipt.ngayChieu)} ${escapeHtml(receipt.gioBatDau)} · ${escapeHtml(receipt.tenPhong)}</div>
-        <div>Ghế: ${receipt.ghe.map(escapeHtml).join(', ')} · Khách hàng: ${escapeHtml(receipt.tenKhachHang)} (${escapeHtml(receipt.sdt)})</div>
-        <div>Tiền vé: ${money(receipt.tienVe)} · Đồ ăn: ${money(receipt.tienDoAn)} · ${escapeHtml(receipt.hinhThucThanhToan)}</div>
-        <strong class="total">Tổng cộng: ${money(receipt.thanhTien)}</strong>
-        ${pending ? `<div class="qr-payment"><img src="${receipt.qrImageUrl === '/qr-chuyen-khoan-agribank.png' ? receipt.qrImageUrl : ''}" alt="Mã QR tĩnh Agribank"><div class="qr-details"><div>Ngân hàng: <strong>${escapeHtml(receipt.nganHang)}</strong></div><div>Số tiền cần chuyển: <strong>${money(receipt.thanhTien)}</strong></div><div>Nội dung chuyển khoản: <strong>${escapeHtml(receipt.maThamChieuChuyenKhoan)}</strong></div><div>Thời hạn giữ ghế: <strong id="payment-countdown"></strong></div><p class="payment-note">Quét QR tĩnh, sau đó tự nhập chính xác số tiền và nội dung chuyển khoản ở trên. Admin chỉ xác nhận sau khi đối chiếu được tiền vào ngân hàng.</p></div></div>` : ''}`;
-      element.dataset.pending = String(pending);
-      element.style.display = 'block';
-      if (pending) {
-        const deadline = new Date(receipt.hetHanThanhToan).getTime();
-        const updateCountdown = () => {
-          const remaining = Math.max(0, deadline - Date.now());
-          const minutes = Math.floor(remaining / 60000);
-          const seconds = Math.floor((remaining % 60000) / 1000);
-          const timer = $('#payment-countdown');
-          if (timer) timer.textContent = remaining > 0
-            ? `${minutes}:${String(seconds).padStart(2, '0')}`
-            : 'Đã hết hạn; ghế sẽ được giải phóng.';
-        };
-        updateCountdown();
-        paymentCountdown = window.setInterval(updateCountdown, 1000);
-      }
-    }
-
-    document.addEventListener('click', event => {
-      const showtimeButton = event.target.closest('[data-showtime]');
-      if (showtimeButton) {
-        selectShowtime(showtimeButton.dataset.showtime).catch(error => notice(error.message));
-        return;
-      }
-      const seatButton = event.target.closest('[data-seat]');
-      if (seatButton) {
-        const seatId = seatButton.dataset.seat;
-        if (state.selectedSeats.has(seatId)) state.selectedSeats.delete(seatId);
-        else if (state.selectedSeats.size < 10) state.selectedSeats.add(seatId);
-        else { notice('Mỗi đơn tối đa 10 ghế.'); return; }
-        seatButton.dataset.selected = String(state.selectedSeats.has(seatId));
-        updateSeatSummary();
-        updateTotals();
-        return;
-      }
-      const quantityButton = event.target.closest('[data-quantity]');
-      if (quantityButton) {
-        const productId = quantityButton.dataset.quantity;
-        const next = Math.max(0, Math.min(20, (state.quantities.get(productId) || 0) + Number(quantityButton.dataset.change)));
-        state.quantities.set(productId, next);
-        $(`#qty-${CSS.escape(productId)}`).value = String(next);
-        updateTotals();
-      }
-    });
-
-    $('#movie-select').addEventListener('change', event => {
-      clearNotice();
-      loadShowtimes(event.target.value).catch(error => notice(error.message));
-    });
-    $('#book-button').addEventListener('click', () => submitBooking().catch(error => notice(error.message)));
-    $('#logout-button').addEventListener('click', async () => {
-      try {
-        await api('/api/auth/logout', { method: 'POST' });
-        location.href = '/DangNhap.html';
-      } catch (error) {
-        notice(error.message);
-      }
-    });
-
-    async function initialize() {
-      const session = await api('/api/auth/me');
-      if (session.vaiTro === 'ADMIN') {
-        location.href = '/QuanTri.html';
-        return;
-      }
-      if (session.vaiTro === 'STAFF') {
-        location.href = '/Database.html';
-        return;
-      }
-      if (session.vaiTro !== 'CUSTOMER') {
-        location.href = '/DangNhap.html';
-        return;
-      }
-      paymentConfig = await api('/api/dat-ve/payment-config');
-      if (paymentConfig.chuyenKhoanDaCauHinh) {
-        $('#payment-transfer').checked = true;
-        $('#payment-note').textContent = `Quét QR tĩnh ${paymentConfig.nganHang}, rồi nhập đúng số tiền và nội dung chuyển khoản của đơn. Admin xác nhận khi đối chiếu được tiền vào; ghế được giữ tối đa ${paymentConfig.thoiHanGiuGhePhut} phút.`;
-      } else {
-        $('#payment-transfer').disabled = true;
-        document.querySelector('input[name="payment"][value="Tiền mặt"]').checked = true;
-        $('#payment-note').textContent = 'QR chuyển khoản hiện không khả dụng; vui lòng chọn tiền mặt tại quầy.';
-      }
-      const account = await api('/api/account');
-      $('#customer-summary').textContent = `${account.hoTen} · ${account.sdt || 'Chưa cập nhật số điện thoại'}`;
-      await Promise.all([loadMovies(), loadProducts()]);
-      if (state.movies.length) await loadShowtimes('');
-    }
-
-    initialize().catch(error => {
-      if (error.message.includes('đăng nhập')) {
-        location.href = `/DangNhap.html?next=${encodeURIComponent('/DatVe.html')}`;
-        return;
-      }
-      notice(error.message);
-    });
-  </script>
-  <script src="/ui-preferences.js"></script>
+  <dialog id="checkout-dialog" aria-labelledby="checkout-title">
+    <form id="checkout-form">
+      <h2 id="checkout-title">Xác nhận đặt vé</h2>
+      <p id="checkout-summary"></p>
+      <p id="customer-summary"></p>
+      <fieldset id="extras" hidden><legend>Đồ ăn và thức uống</legend><div id="products"></div></fieldset>
+      <label>Hình thức thanh toán <select name="payment" id="payment"><option>Tiền mặt</option><option>Chuyển khoản</option></select></label>
+      <p id="payment-note" class="hint" hidden></p>
+      <p id="checkout-error" class="error" role="alert" hidden></p>
+      <div class="actions"><button type="button" class="secondary" id="cancel-checkout">Quay lại</button><button type="submit" class="primary" id="buy">Xác nhận và nhận vé</button></div>
+    </form>
+  </dialog>
+  <dialog id="receipt" aria-labelledby="receipt-title">
+    <div class="receipt-head"><span id="receipt-badge" class="badge">VÉ ĐIỆN TỬ</span><h2 id="receipt-title">Đặt vé thành công</h2></div>
+    <div id="receipt-info"></div>
+    <ul id="receipt-tickets"></ul>
+    <div id="transfer-details" hidden></div>
+    <div class="actions"><button type="button" class="secondary" id="close-receipt">Đóng</button><button type="button" class="primary" id="print-receipt">In / Lưu PDF</button></div>
+  </dialog>
 </body>
 </html>

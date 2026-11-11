@@ -1,0 +1,29 @@
+:root {
+  color-scheme: light;
+  --bg: #f6f7fb;
+  --ink: #222;
+  --muted: #666;
+  --edge: #ddd;
+  --brand: #8a1630;
+}
+
+body { background: var(--bg); color: var(--ink); font-family: Arial, sans-serif; }
+.mast { display: block; margin: 0; background: transparent; border: 0; }
+.site-bar { width: min(1100px, calc(100% - 36px)); margin: 20px auto 0; min-height: 62px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.site-brand { display: flex; align-items: center; gap: 9px; color: var(--ink); font-size: 17px; font-weight: bold; text-decoration: none; }
+.site-brand img { object-fit: contain; }
+.site-brand small { display: block; color: var(--muted); font-size: 13px; font-weight: normal; }
+.site-nav { display: flex; gap: 5px; }
+.site-nav a { padding: 8px 10px; border: 1px solid #ccc; border-radius: 6px; background: #fff; color: var(--ink); text-decoration: none; font-size: 14px; white-space: nowrap; }
+.site-nav a:hover, .site-nav [aria-current] { background: #e9edf2; border-color: #adb6c2; }
+.site-nav a:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.container { width: min(1100px, calc(100% - 36px)); }
+.admin main { width: min(1100px, calc(100% - 36px)); margin: 20px auto; padding: 0; }
+.admin h1 { margin-bottom: 16px; }
+.intro { padding-top: 16px; }
+.panel { padding: 18px; border: 0; box-shadow: 0 2px 10px #00000012; }
+input, select, button { border-color: #ccc; border-radius: 6px; }
+.secondary, .movie, .show, .admin button { background: #f0f1f2; }
+.movie { border-left: 1px solid #ccc; }
+.admin th { background: #f1f3f5; }
+.admin th, .admin td { padding: 8px; border-color: #ddd; }
