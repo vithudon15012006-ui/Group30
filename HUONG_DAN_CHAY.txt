@@ -1,0 +1,215 @@
+HUONG DAN CHAY DATABASE VA GIAO DIEN PTIT CINEMA - NHOM 30
+=========================================================
+
+Tai lieu nay huong dan khoi dong MySQL bang XAMPP, nap database va mo giao dien web.
+May tinh can co XAMPP, Java 17 tro len va Maven.
+
+
+1. KHOI DONG MYSQL BANG XAMPP
+----------------------------
+1. Mo XAMPP Control Panel.
+2. Bam Start o dong MySQL va cho den khi dich vu chay.
+3. Apache chi can bat neu ban muon mo phpMyAdmin qua localhost/phpmyadmin.
+   Ung dung PTIT Cinema khong can Apache XAMPP de phuc vu giao dien; Spring Boot
+   se phuc vu trang web tren cong 8080.
+
+
+2. NAP DATABASE NEU CHUA CO HOAC MUON TAO LAI
+----------------------------------------------
+1. Mo trinh duyet va vao http://localhost/phpmyadmin.
+2. Chon tab Nhap (Import).
+3. Bam Chon tep va chon file:
+   database\database.sql
+   (duong dan day du: C:\_CSDL\PTIT_Cinema_Group30\PTIT_Cinema_Project\database\database.sql)
+4. De dinh dang la SQL, keo xuong cuoi trang va bam Nhap/Thuc hien.
+5. Cho phpMyAdmin chay xong. Kiem tra database QuanLyRapChieuPhim va cac bang
+   nhu Phim, KhachHang, SuatChieu, HoaDon, Ve.
+6. Import bon migration theo thu tu:
+   database\migrations\V1__account_security.sql
+   database\migrations\V2__customer_phone_login.sql
+   database\migrations\V3__qr_transfer_payments.sql
+   database\migrations\V4__schedule_management.sql
+   V1 tao bang tai khoan; V2 chuyen khach sang dang nhap bang so dien thoai;
+   V3 bo sung thanh toan QR, giu ghe tam va lich su ghe tren hoa don. Cac
+   V4 tao bang gia ve mac dinh, cho phep admin cap nhat gia va quan ly suat
+   chieu. Cac migration khong xoa database. Neu V1-V3 da chay truoc do, chi
+   import V4 mot lan.
+
+CANH BAO QUAN TRONG:
+File SQL co lenh DROP DATABASE IF EXISTS QuanLyRapChieuPhim. Chay file se xoa
+database QuanLyRapChieuPhim cu va tao lai tu dau. Moi du lieu da nhap trong
+database nay se mat. Hay xuat/sao luu truoc neu can giu du lieu.
+Neu database va du lieu mau da co san va ban khong muon lam moi, bo qua buoc Import.
+
+
+3. CAU HINH KET NOI MYSQL
+-------------------------
+Ung dung doc cau hinh trong:
+src\main\resources\application.properties
+
+URL mac dinh ket noi toi:
+localhost:3306/QuanLyRapChieuPhim
+
+Cac bien moi truong duoc ho tro:
+- DB_USERNAME: ten tai khoan MySQL (mac dinh trong ung dung la root).
+- DB_PASSWORD: mat khau MySQL.
+- MAIL_HOST, MAIL_PORT, MAIL_USERNAME, MAIL_PASSWORD, MAIL_FROM: SMTP gui thu moi nhan vien (khong can cho khach dang ky).
+- APP_PUBLIC_BASE_URL: dia chi public de tao lien ket thu moi nhan vien.
+- APP_BOOTSTRAP_ADMIN_EMAIL va APP_BOOTSTRAP_ADMIN_PASSWORD: tao admin lan dau.
+- PAYMENT_TRANSFER_EXPIRY_MINUTES: so phut giu ghe (mac dinh 15; gioi han 1-120).
+- SESSION_COOKIE_SECURE=true khi chay tren HTTPS.
+
+Neu MySQL XAMPP cua ban dung root va mat khau trong (cau hinh thuong gap cua
+XAMPP), co the giu cau hinh mac dinh. Neu ban da dat mat khau, can dat DB_PASSWORD
+cho dung truoc khi chay ung dung, hoac cap nhat cau hinh local.
+Khong dua mat khau that vao file cong khai, anh chup man hinh, GitHub hoac bao cao.
+
+
+4. CHAY UNG DUNG SPRING BOOT
+----------------------------
+1. Mo thu muc du an PTIT_Cinema_Project bang VS Code.
+2. Chon Terminal > New Terminal.
+3. Khach dang ky bang so dien thoai nen khong can cau hinh SMTP. Neu can tao
+   admin dau tien, dat cac bien admin bootstrap trong terminal (khong ghi mat
+   khau that vao file cong khai), sau do chay:
+
+   $env:APP_BOOTSTRAP_ADMIN_EMAIL = "admin@example.com"
+   $env:APP_BOOTSTRAP_ADMIN_PASSWORD = "..."
+   mvn spring-boot:run
+
+Admin bootstrap chi tao tai khoan neu email chua ton tai; sau khi tao xong co the
+bo hai bien APP_BOOTSTRAP_ADMIN_* khoi moi truong. Chi can SMTP neu muon admin
+gui thu moi tai khoan nhan vien; khach hang khong can email de dang ky/dang nhap.
+
+QR Agribank tinh da duoc dong goi trong ung dung, khong can khai bao cac bien
+PAYMENT_BANK_* hoac PAYMENT_ACCOUNT_*. Khach phai tu nhap dung so tien va ma
+tham chieu cua don vi QR tinh khong tu dien hai thong tin nay. He thong khong
+tu nhan thong bao tu ngan hang; admin phai doi chieu giao dich trong ung dung
+ngan hang truoc khi bam xac nhan. Don het han se tu dong nha ghe; neu tien den
+muon, can xu ly/hoan tien thu cong.
+
+Neu terminal chua dung o thu muc du an, chay:
+
+   cd C:\TEST_CSDL\PTIT_Cinema_Group30\PTIT_Cinema_Project
+   mvn spring-boot:run
+
+4. Cho den khi terminal hien dong gan giong:
+
+   Started CinemaApplication
+
+Giu terminal nay mo trong luc su dung giao dien. Khong dong terminal, neu khong
+ung dung Spring Boot se dung.
+
+
+5. MO GIAO DIEN TREN TRINH DUYET
+-------------------------------
+Mo Chrome, Edge hoac trinh duyet khac va vao:
+http://localhost:8080/TaiKhoan.html
+   http://localhost:8080/DangNhap.html
+
+Trang chu cung chuyen den dang nhap:
+
+   http://localhost:8080
+
+Trang tai khoan khach hang:
+
+   
+
+Trang admin mo khoa tai khoan va moi nhan vien:
+
+   http://localhost:8080/QuanTri.html
+
+Trang admin xem doanh thu, lich su giao dich, xac nhan hoac huy don:
+
+   http://localhost:8080/QuanTriThanhToan.html
+
+Trang admin quan ly suat chieu, phong hien co va gia ve:
+
+   http://localhost:8080/QuanTriLichChieu.html
+
+Tren cac trang co the chon ngon ngu Tieng Viet/English va giao dien sang/toi.
+Lua chon duoc luu trong trinh duyet va dung chung giua cac trang.
+
+Giao dien tai khoan dang nhap/dang ky:
+
+   http://localhost:8080/DangNhap.html
+
+Trang tai khoan khach hang:
+
+   http://localhost:8080/TaiKhoan.html
+
+Giao dien dat ve:
+
+   http://localhost:8080/DatVe.html
+
+Giao dien quan ly Phim va Khach hang (can tai khoan STAFF hoac ADMIN):
+- Tim kiem phim theo ma hoac ten.
+- Tim kiem khach hang theo ma, ho ten, so dien thoai hoac email.
+- Them, sua, xoa phim va khach hang.
+
+Sau khi them/sua/xoa phim va khach hang thanh cong, danh sach tren trang se
+duoc tai lai. Admin quan ly suat chieu va gia ghe tai QuanTriLichChieu.html.
+Trang nay su dung cac phong va quan ly da co, hien thi so ghe, so ve/cho va so
+suat trong moi phong. Suat moi phai la tuong lai va khong duoc trung gio/phong.
+Khong sua/xoa suat da co ve, don hang hoac ghe duoc giu. Gia moi chi ap dung
+cho don moi; hoa don cu giu nguyen gia da luu. Them phong vat ly va so do ghe
+hien van can cap nhat database rieng, chua co form tren web.
+
+Khach hang dang ky tai DangNhap.html bang so dien thoai va mat khau, khong can
+xac minh email. Sau 5 lan nhap sai lien tiep, tai khoan bi khoa den khi admin mo khoa. Admin moi
+nhan vien qua QuanTri.html; nhan vien dat mat khau qua email moi. Nen co it nhat
+hai tai khoan ADMIN de tai khoan con lai co the mo khoa neu mot admin bi khoa.
+
+Trang DatVe.html cho phep chon phim/suat chieu, chon ghe, them do an va tao hoa
+don/ve cho tai khoan khach da dang nhap. Khach co the chuyen khoan QR neu admin
+da cau hinh; ghe duoc giu theo thoi han cau hinh (mac dinh 15 phut). Admin can tu
+doi chieu tien va xac nhan thu cong; he thong chua ket noi API ngan hang. Gia ghe
+thuong mac dinh 100.000 dong, ghe VIP 50.000 dong; backend tu tinh lai gia.
+
+Du lieu suat chieu mau hien su dung ngay nam 2024 de phuc vu cac truy van bao
+cao. Trang dat ve hien thi dung lich trong database, ke ca ngay da qua. Hay cap
+nhat lich chieu truoc khi su dung cho hoat dong thuc te.
+
+
+6. DUNG UNG DUNG
+----------------
+Quay lai terminal VS Code dang chay ung dung va nhan Ctrl+C.
+Thao tac nay chi dung Spring Boot, khong xoa database.
+
+Neu khong con dung phpMyAdmin hoac ung dung, co the bam Stop cho MySQL trong
+XAMPP Control Panel. Database van duoc luu tren may va co the mo lai lan sau.
+
+
+7. LOI THUONG GAP
+-----------------
+- "Communications link failure" hoac khong ket noi MySQL:
+  Kiem tra MySQL trong XAMPP da Start chua, cong co phai 3306 khong va ten
+  database co dung QuanLyRapChieuPhim khong.
+
+- "Access denied for user":
+  Kiem tra DB_USERNAME va DB_PASSWORD co trung voi tai khoan MySQL tren XAMPP
+  khong. Khong gui mat khau len chat/cong khai.
+
+- "Unknown database":
+  Import file database/database.sql truoc, hoac kiem tra database trong
+  phpMyAdmin co ten QuanLyRapChieuPhim.
+
+- "Port 8080 was already in use":
+  Ung dung khac dang dung cong 8080. Dung ung dung cu bang Ctrl+C hoac doi
+  server.port trong application.properties.
+
+- Lenh "mvn" khong duoc nhan dien:
+  Kiem tra Maven da duoc cai dat va co trong PATH; sau do dong/mo lai terminal.
+
+
+THONG TIN DU AN
+---------------
+Database: QuanLyRapChieuPhim
+File SQL: database\database.sql
+Trang web: http://localhost:8080/Database.html
+Dang nhap/dang ky: http://localhost:8080/DangNhap.html
+Tai khoan khach hang: http://localhost:8080/TaiKhoan.html
+Quan tri tai khoan: http://localhost:8080/QuanTri.html
+Quan tri thanh toan: http://localhost:8080/QuanTriThanhToan.html
+API phim: http://localhost:8080/api/phim
+API khach hang: http://localhost:8080/api/khach-hang

@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#11131b">
+  <title>PTIT Cinema | Thanh toán</title>
+  <link rel="stylesheet" href="/ui-preferences.css">
+  <style>
+    :root{color-scheme:dark;--bg:#11131b;--panel:#1a1d28;--raised:#202431;--border:#303545;--text:#f4f4f6;--muted:#a5a9b8;--gold:#f5b942;--green:#68d6a0;--red:#ff737e;font-family:Inter,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--text)}
+    *{box-sizing:border-box}body{min-width:320px;margin:0;background:radial-gradient(ellipse at 85% -15%,rgb(130 37 49 / 22%),transparent 42rem),var(--bg)}button,select{font:inherit}button,a{cursor:pointer}a{color:var(--gold);text-decoration:none}.shell{width:min(1120px,calc(100% - 32px));margin:auto}.top{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:14px;border-bottom:1px solid rgb(255 255 255 / 8%)}.brand{font-weight:800}.brand small{display:block;color:var(--muted);font-size:11px;font-weight:500;letter-spacing:.13em;text-transform:uppercase}.nav{display:flex;align-items:center;gap:15px}.hero{padding:34px 0 20px}.eyebrow{color:var(--gold);font-size:12px;font-weight:800;letter-spacing:.15em;text-transform:uppercase}.hero h1{margin:8px 0;font-size:clamp(29px,4vw,42px);letter-spacing:-.04em}.hero p{color:var(--muted)}
+    .message{display:none;margin-bottom:16px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;line-height:1.5}.message[data-kind=error]{border-color:#87414a;color:#ffdce0}.message[data-kind=success]{border-color:#3a795b;color:#d7ffea}
+    .stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:20px 0}.stat,.panel{border:1px solid var(--border);border-radius:14px;background:var(--panel);box-shadow:0 12px 38px #0002}.stat{padding:16px}.stat span{display:block;color:var(--muted);font-size:12px}.stat strong{display:block;margin-top:8px;color:var(--gold);font-size:22px}
+    .panel{overflow:hidden;margin-bottom:22px}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:17px 19px;border-bottom:1px solid var(--border)}.panel-head h2{margin:0;font-size:17px}.filters{display:flex;align-items:center;gap:10px}.filters select{min-height:38px;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:#131620;color:var(--text)}.button{min-height:38px;padding:8px 12px;border:0;border-radius:9px;background:var(--gold);color:#21190a;font-weight:800}.button.secondary{border:1px solid var(--border);background:var(--raised);color:var(--text)}.button.danger{border:1px solid #87414a;background:#3a2026;color:#ffdce0}.button:disabled{opacity:.55;cursor:wait}.list{display:grid;gap:12px;padding:16px}.payment{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;padding:16px;border:1px solid var(--border);border-radius:12px;background:#151822}.payment h3{margin:0 0 7px;font-size:15px}.meta{display:flex;flex-wrap:wrap;gap:6px 14px;color:var(--muted);font-size:12px;line-height:1.6}.seat-list{margin-top:9px;color:var(--text);font-size:13px;line-height:1.6}.amount{align-self:start;color:var(--gold);font-size:18px;font-weight:850;white-space:nowrap}.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.status{display:inline-block;padding:4px 8px;border:1px solid var(--border);border-radius:999px;font-size:11px;font-weight:750}.status[data-status=PAID]{color:var(--green)}.status[data-status=PENDING]{color:#ffd477}.status[data-status=EXPIRED],.status[data-status=CANCELLED]{color:#ff9ba3}.empty{padding:30px;color:var(--muted);text-align:center}.info{margin:0;padding:14px 18px;color:var(--muted);font-size:12px;line-height:1.5}
+    @media(max-width:850px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stats .stat:last-child{grid-column:1/-1}}
+    @media(max-width:600px){.shell{width:calc(100% - 24px)}.top{flex-wrap:wrap;padding:10px 0}.nav{width:100%;justify-content:space-between;font-size:12px}.panel-head{align-items:flex-start;flex-direction:column}.filters{width:100%}.filters select{flex:1}.payment{grid-template-columns:1fr}.amount{grid-row:1}.actions{justify-content:flex-start}.stats{gap:8px}.stat{padding:12px}.stat strong{font-size:18px}}
+  </style>
+</head>
+<body>
+  <header class="shell top">
+    <div class="brand">PTIT Cinema<small>Quản trị thanh toán</small></div>
+    <nav class="nav"><a href="/QuanTri.html">Tài khoản</a><a href="/QuanTriLichChieu.html">Lịch chiếu & giá vé</a><a href="/Database.html">Quản lý dữ liệu</a><button id="logout" class="button secondary" type="button">Đăng xuất</button></nav>
+  </header>
+  <main class="shell">
+    <section class="hero"><div class="eyebrow">Doanh thu và đối soát</div><h1>Thanh toán & giao dịch</h1><p>Đối chiếu tiền đã thực nhận trong ngân hàng trước khi xác nhận đơn chuyển khoản.</p></section>
+    <div id="message" class="message" role="status" aria-live="polite"></div>
+    <section class="stats" aria-label="Thống kê thanh toán">
+      <article class="stat"><span>Tổng doanh thu đã xác nhận</span><strong id="revenue-total">—</strong></article>
+      <article class="stat"><span>Doanh thu hôm nay</span><strong id="revenue-today">—</strong></article>
+      <article class="stat"><span>Giao dịch đã thanh toán</span><strong id="paid-count">—</strong></article>
+      <article class="stat"><span>Đơn chờ xác nhận</span><strong id="pending-count">—</strong></article>
+      <article class="stat"><span>Đơn hết hạn</span><strong id="expired-count">—</strong></article>
+    </section>
+    <section class="panel">
+      <div class="panel-head"><div><h2>Lịch sử giao dịch</h2><p class="info">Chỉ xác nhận khi đã thấy đúng số tiền và mã đơn trong tài khoản ngân hàng.</p></div><div class="filters"><select id="status"><option value="ALL">Tất cả trạng thái</option><option value="PENDING">Chờ thanh toán</option><option value="PAID">Đã thanh toán</option><option value="EXPIRED">Hết hạn</option><option value="CANCELLED">Đã hủy</option></select><button id="refresh" class="button secondary" type="button">Làm mới</button></div></div>
+      <div id="payments" class="list"><div class="empty">Đang tải giao dịch…</div></div>
+    </section>
+  </main>
+  <script>
+    const $=selector=>document.querySelector(selector);let csrf=null;
+    const money=value=>new Intl.NumberFormat('vi-VN').format(value)+' ₫';
+    const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+    async function api(url,options={}){const settings={...options,headers:{...(options.headers||{})}};if(settings.method&&settings.method!=='GET'){csrf||=await fetch('/api/auth/csrf').then(r=>r.json());settings.headers[csrf.headerName]=csrf.token}const response=await fetch(url,settings);const data=response.status===204?null:await response.json();if(!response.ok)throw new Error(data?.message||'Không thể hoàn tất yêu cầu.');return data}
+    function notice(text,kind='success'){const el=$('#message');el.textContent=text;el.dataset.kind=kind;el.style.display='block';el.scrollIntoView({behavior:'smooth',block:'center'})}
+    function dateTime(value){return value?new Date(value).toLocaleString('vi-VN'): '—'}
+    function renderSummary(summary){$('#revenue-total').textContent=money(summary.tongDoanhThu);$('#revenue-today').textContent=money(summary.doanhThuHomNay);$('#paid-count').textContent=summary.soGiaoDichDaThanhToan;$('#pending-count').textContent=summary.soDonChoThanhToan;$('#expired-count').textContent=summary.soDonHetHan}
+    function renderPayments(items){const host=$('#payments');if(!items.length){host.innerHTML='<div class="empty">Không có giao dịch phù hợp.</div>';return}host.innerHTML=items.map(payment=>{const seats=payment.ghe.map(seat=>`${escapeHtml(seat.tenPhim)} · ${escapeHtml(seat.ngayChieu)} ${escapeHtml(seat.gioBatDau)} · ${escapeHtml(seat.tenPhong)} · Ghế ${escapeHtml(seat.maGhe)} (${money(seat.gia)})`).join('<br>');return `<article class="payment"><div><h3>${escapeHtml(payment.maHoaDon)} <span class="status" data-status="${escapeHtml(payment.trangThaiThanhToan)}">${escapeHtml(payment.trangThaiThanhToan)}</span></h3><div class="meta"><span>Khách: ${escapeHtml(payment.tenKhachHang||'—')} · ${escapeHtml(payment.sdt||'—')}</span><span>Tạo lúc: ${escapeHtml(dateTime(payment.thoiGianTao))}</span><span>Thanh toán: ${escapeHtml(dateTime(payment.thoiGianThanhToan))}</span><span>Hình thức: ${escapeHtml(payment.hinhThucThanhToan||'—')}</span>${payment.maThamChieuChuyenKhoan?`<span>Nội dung CK: <strong>${escapeHtml(payment.maThamChieuChuyenKhoan)}</strong></span>`:''}${payment.hetHanThanhToan?`<span>Hạn thanh toán: ${escapeHtml(dateTime(payment.hetHanThanhToan))}</span>`:''}${payment.xacNhanBoi?`<span>Xác nhận bởi: ${escapeHtml(payment.xacNhanBoi)}</span>`:''}</div><div class="seat-list">${seats||'Không có chi tiết ghế.'}</div>${payment.trangThaiThanhToan==='PENDING'?`<div class="actions"><button class="button" type="button" data-confirm="${escapeHtml(payment.maHoaDon)}">Đã nhận tiền · Xác nhận</button><button class="button danger" type="button" data-cancel="${escapeHtml(payment.maHoaDon)}">Hủy đơn</button></div>`:''}</div><div class="amount">${money(payment.thanhTien)}</div></article>`}).join('')}
+    async function refresh(){const [summary,payments]=await Promise.all([api('/api/admin/payments/summary'),api(`/api/admin/payments?status=${encodeURIComponent($('#status').value)}`)]);renderSummary(summary);renderPayments(payments)}
+    async function initialize(){const session=await api('/api/auth/me');if(session.vaiTro!=='ADMIN'){location.href='/DangNhap.html';return}await refresh()}
+    $('#refresh').addEventListener('click',()=>refresh().catch(error=>notice(error.message,'error')));
+    $('#status').addEventListener('change',()=>refresh().catch(error=>notice(error.message,'error')));
+    $('#payments').addEventListener('click',async event=>{const confirmButton=event.target.closest('[data-confirm]');const cancelButton=event.target.closest('[data-cancel]');try{if(confirmButton){if(!window.confirm('Chỉ xác nhận nếu bạn đã thấy giao dịch chuyển khoản thành công trong tài khoản ngân hàng. Tiếp tục?'))return;await api(`/api/admin/payments/${encodeURIComponent(confirmButton.dataset.confirm)}/confirm`,{method:'POST'});notice('Đã xác nhận thanh toán.');}else if(cancelButton){if(!window.confirm('Hủy đơn này và giải phóng ghế đang giữ?'))return;await api(`/api/admin/payments/${encodeURIComponent(cancelButton.dataset.cancel)}/cancel`,{method:'POST'});notice('Đã hủy đơn.');}else{return}await refresh()}catch(error){notice(error.message,'error')}});
+    $('#logout').addEventListener('click',async()=>{try{await api('/api/auth/logout',{method:'POST'});location.href='/DangNhap.html'}catch(error){notice(error.message,'error')}});
+    initialize().catch(error=>{notice(error.message,'error')});
+    window.setInterval(()=>refresh().catch(error=>notice(error.message,'error')),30000);
+  </script>
+  <script src="/ui-preferences.js"></script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f3f5fa;
+  --surface: #ffffff;
+  --panel: #ffffff;
+  --raised: #edf0f7;
+  --border: #d7dce7;
+  --text: #202434;
+  --muted: #626b7e;
+  --accent: #aa6b00;
+  --accent-strong: #855300;
+  --gold: #aa6b00;
+  --green: #18764b;
+  --red: #bd3443;
+}
+
+:root[data-theme="light"] body {
+  background: var(--bg) !important;
+  color: var(--text);
+}
+
+:root[data-theme="light"] .panel,
+:root[data-theme="light"] .card,
+:root[data-theme="light"] .order,
+:root[data-theme="light"] .food-item,
+:root[data-theme="light"] .showtime,
+:root[data-theme="light"] .demo-note,
+:root[data-theme="light"] .notice,
+:root[data-theme="light"] .message {
+  background: var(--panel) !important;
+  color: var(--text);
+}
+
+:root[data-theme="light"] input,
+:root[data-theme="light"] select,
+:root[data-theme="light"] .tabs,
+:root[data-theme="light"] .ticket,
+:root[data-theme="light"] .seat,
+:root[data-theme="light"] .showtime {
+  background-color: #f7f8fb;
+  color: var(--text);
+}
+
+:root[data-theme="light"] .seat[data-selected="true"],
+:root[data-theme="light"] .button-primary,
+:root[data-theme="light"] .primary,
+:root[data-theme="light"] .button:not(.button-secondary):not(.button-quiet):not(.button-delete) {
+  background-color: #edb641;
+  color: #21190a;
+}
+
+:root[data-theme="light"] .seat:disabled {
+  background: #f5dfe2;
+  color: #81323b;
+}
+
+:root[data-theme="light"] .pay-option,
+:root[data-theme="light"] .field label {
+  color: var(--text);
+}
+
+.ui-preferences {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 7px;
+  margin-left: 12px;
+}
+
+.ui-preferences-floating {
+  position: fixed;
+  z-index: 20;
+  top: 14px;
+  right: 14px;
+  margin: 0;
+}
+
+.ui-preferences select,
+.ui-preferences button {
+  min-height: 34px;
+  padding: 6px 9px;
+  border: 1px solid var(--border, #303545);
+  border-radius: 9px;
+  background: var(--raised, #202431);
+  color: var(--text, #f4f4f6);
+  font: inherit;
+  font-size: 12px;
+}
+
+.ui-preferences button {
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .top {
+    height: auto;
+    min-height: 74px;
+    flex-wrap: wrap;
+    gap: 10px 12px;
+    padding-block: 10px;
+  }
+
+  .top > .ui-preferences {
+    flex-basis: 100%;
+    justify-content: flex-end;
+    margin-left: 0;
+  }
+
+  .ui-preferences {
+    gap: 5px;
+    margin-left: 6px;
+  }
+
+  .ui-preferences-floating {
+    top: 8px;
+    right: 8px;
+  }
+
+  .ui-preferences select,
+  .ui-preferences button {
+    min-height: 32px;
+    padding: 5px 7px;
+    font-size: 11px;
+  }
+}

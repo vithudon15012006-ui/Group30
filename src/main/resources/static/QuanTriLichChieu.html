@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#11131b">
+  <title>PTIT Cinema | Lịch chiếu và giá vé</title>
+  <link rel="stylesheet" href="/ui-preferences.css">
+  <style>
+    :root{color-scheme:dark;--bg:#11131b;--panel:#1a1d28;--raised:#202431;--border:#303545;--text:#f4f4f6;--muted:#a5a9b8;--gold:#f5b942;--green:#68d6a0;--red:#ff737e;font-family:Inter,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--text)}
+    *{box-sizing:border-box}body{min-width:320px;margin:0;background:radial-gradient(ellipse at 85% -15%,rgb(130 37 49 / 22%),transparent 42rem),var(--bg)}button,input,select{font:inherit}button,a{cursor:pointer}a{color:var(--gold);text-decoration:none}.shell{width:min(1200px,calc(100% - 32px));margin:auto}
+    .top{min-height:72px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgb(255 255 255 / 8%)}.brand{font-weight:800}.brand small{display:block;color:var(--muted);font-size:11px;font-weight:500;letter-spacing:.13em;text-transform:uppercase}.nav{display:flex;align-items:center;gap:14px}
+    .hero{padding:35px 0 20px}.eyebrow{color:var(--gold);font-size:12px;font-weight:800;letter-spacing:.15em;text-transform:uppercase}.hero h1{margin:8px 0;font-size:clamp(29px,4vw,42px);letter-spacing:-.04em}.hero p,.sub,.help{color:var(--muted)}.hero p{line-height:1.55}
+    .message{display:none;margin:0 0 16px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;line-height:1.5}.message[data-kind=error]{border-color:#87414a;color:#ffdce0}.message[data-kind=success]{border-color:#3a795b;color:#d7ffea}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding-bottom:48px}.panel{min-width:0;overflow:hidden;border:1px solid var(--border);border-radius:16px;background:var(--panel);box-shadow:0 18px 50px #0002}.wide{grid-column:1/-1}.head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:19px 21px;border-bottom:1px solid var(--border)}h2{margin:0;font-size:17px}.sub{margin:5px 0 0;font-size:12px}.body{padding:20px 21px}.form{display:grid;gap:13px}.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.field{display:grid;gap:7px;min-width:0}.field label{font-size:12px;font-weight:700;color:#d5d7df}.field input,.field select{width:100%;min-height:43px;padding:10px 12px;border:1px solid var(--border);border-radius:9px;background:#131620;color:var(--text)}.field input:focus,.field select:focus{border-color:var(--gold);outline:0}.field-full{grid-column:1/-1}
+    .button{min-height:38px;padding:8px 12px;border:0;border-radius:9px;background:var(--gold);color:#21190a;font-weight:800}.button.secondary{border:1px solid var(--border);background:var(--raised);color:var(--text)}.button.danger{border:1px solid #87414a;background:#382027;color:#ffdce0}.button:disabled{opacity:.5;cursor:wait}.actions{display:flex;flex-wrap:wrap;gap:8px}.help{font-size:12px;line-height:1.55}
+    .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}.stat{padding:13px;border:1px solid var(--border);border-radius:11px;background:var(--raised)}.stat strong{display:block;margin-top:5px;color:var(--gold);font-size:18px}.stat span{color:var(--muted);font-size:11px}
+    .table-wrap{overflow:auto;border:1px solid var(--border);border-radius:10px}table{width:100%;border-collapse:collapse;min-width:980px}th,td{padding:11px 10px;border-bottom:1px solid var(--border);text-align:left;vertical-align:middle}th{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.04em}td{font-size:12px}tbody tr:last-child td{border-bottom:0}.pill{display:inline-block;padding:4px 7px;border:1px solid var(--border);border-radius:99px;color:var(--muted);font-size:10px}.empty{padding:22px;color:var(--muted);text-align:center}
+    @media(max-width:800px){.shell{width:calc(100% - 24px)}.grid{grid-template-columns:1fr}.wide{grid-column:auto}.fields{grid-template-columns:1fr}.nav{gap:8px;font-size:11px}.head,.body{padding:15px}}
+  </style>
+</head>
+<body>
+  <header class="shell top">
+    <div class="brand">PTIT Cinema<small>Khu vực quản trị</small></div>
+    <nav class="nav"><a href="/QuanTri.html">Tài khoản</a><a href="/QuanTriThanhToan.html">Thanh toán</a><a href="/Database.html">Quản lý phim</a><button id="logout" class="button secondary" type="button">Đăng xuất</button></nav>
+  </header>
+  <main class="shell">
+    <section class="hero"><div class="eyebrow">Vận hành rạp</div><h1>Lịch chiếu và giá vé</h1><p>Tạo suất chiếu trong các phòng hiện có và cập nhật giá áp dụng cho những đơn đặt vé mới. Giá trên vé đã phát hành được giữ nguyên.</p></section>
+    <div id="message" class="message" role="status" aria-live="polite"></div>
+    <div class="grid">
+      <section class="panel">
+        <div class="head"><div><h2>Giá vé</h2><p class="sub">Áp dụng theo loại ghế cho các giao dịch đặt sau khi lưu.</p></div></div>
+        <div class="body">
+          <form id="prices-form" class="form">
+            <div class="fields">
+              <div class="field"><label for="price-standard">Ghế thường (đồng)</label><input id="price-standard" type="number" min="1000" max="10000000" step="1000" required></div>
+              <div class="field"><label for="price-vip">Ghế VIP (đồng)</label><input id="price-vip" type="number" min="1000" max="10000000" step="1000" required></div>
+            </div>
+            <div class="actions"><button class="button" type="submit">Lưu giá vé</button></div>
+            <p class="help">Giá hợp lệ từ 1.000 đến 10.000.000 đồng. Mỗi hóa đơn đã tạo giữ nguyên giá tại thời điểm đặt.</p>
+          </form>
+        </div>
+      </section>
+      <section class="panel">
+        <div class="head"><div><h2>Phòng chiếu hiện có</h2><p class="sub">Chọn phòng khi lập suất. Thêm phòng và sơ đồ ghế chưa hỗ trợ trên trang này.</p></div></div>
+        <div class="body"><div id="rooms" class="stats"><div class="empty">Đang tải…</div></div></div>
+      </section>
+      <section class="panel wide">
+        <div class="head"><div><h2 id="schedule-form-title">Tạo suất chiếu</h2><p class="sub">Suất mới phải ở tương lai, không trùng giờ trong cùng phòng.</p></div><a href="/Database.html">Thêm hoặc sửa thông tin phim</a></div>
+        <div class="body">
+          <form id="schedule-form" class="form">
+            <div class="fields">
+              <div class="field"><label for="movie">Phim</label><select id="movie" required><option value="">Đang tải…</option></select></div>
+              <div class="field"><label for="room">Phòng chiếu</label><select id="room" required><option value="">Đang tải…</option></select></div>
+              <div class="field"><label for="manager">Quản lý suất chiếu</label><select id="manager" required><option value="">Đang tải…</option></select></div>
+              <div class="field"><label for="date">Ngày chiếu</label><input id="date" type="date" required></div>
+              <div class="field"><label for="start">Giờ bắt đầu</label><input id="start" type="time" required></div>
+              <div class="field"><label for="end">Giờ kết thúc</label><input id="end" type="time" required></div>
+            </div>
+            <div class="actions"><button id="save-schedule" class="button" type="submit">Tạo suất chiếu</button><button id="cancel-edit" class="button secondary" type="button" hidden>Hủy sửa</button></div>
+            <p class="help">Không thể sửa hoặc xóa suất đã có vé, lịch sử đơn hàng hoặc ghế đang được giữ. Muốn tạo nhiều suất, hãy thêm từng suất với giờ và phòng phù hợp.</p>
+          </form>
+        </div>
+      </section>
+      <section class="panel wide">
+        <div class="head"><div><h2>Danh sách suất chiếu</h2><p class="sub">Tối đa 500 suất, lịch sắp tới được xếp trước.</p></div><button id="refresh" class="button secondary" type="button">Làm mới</button></div>
+        <div class="body"><div class="table-wrap"><table><thead><tr><th>Ngày / giờ</th><th>Phim</th><th>Phòng</th><th>Quản lý</th><th>Ghế</th><th>Vé / đang giữ</th><th>Thao tác</th></tr></thead><tbody id="schedules"><tr><td class="empty" colspan="7">Đang tải…</td></tr></tbody></table></div></div>
+      </section>
+    </div>
+  </main>
+  <script>
+    const $=selector=>document.querySelector(selector);
+    let csrf=null, options=null, schedules=[], editingId=null;
+    const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+    async function api(url,options={}){const settings={...options,headers:{...(options.headers||{})}};if(settings.method&&settings.method!=='GET'){csrf||=await fetch('/api/auth/csrf').then(r=>r.json());settings.headers[csrf.headerName]=csrf.token}const response=await fetch(url,settings);const data=response.status===204?null:await response.json();if(!response.ok)throw new Error(data?.message||'Yêu cầu chưa thể hoàn tất.');return data}
+    function notice(text,kind='success'){const el=$('#message');el.textContent=text;el.dataset.kind=kind;el.style.display='block';el.scrollIntoView({behavior:'smooth',block:'nearest'})}
+    function dateValue(date){return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`}
+    function renderOptions(){const movie=$('#movie'),room=$('#room'),manager=$('#manager');movie.innerHTML='<option value="">Chọn phim</option>'+options.movies.map(item=>`<option value="${esc(item.maPhim)}">${esc(item.tenPhim)} · ${esc(item.maPhim)}</option>`).join('');room.innerHTML='<option value="">Chọn phòng</option>'+options.rooms.map(item=>`<option value="${esc(item.maPhong)}">${esc(item.tenPhong||item.maPhong)} · ${item.soGhe} ghế</option>`).join('');manager.innerHTML='<option value="">Chọn quản lý</option>'+options.managers.map(item=>`<option value="${esc(item.maQuanLy)}">${esc(item.hoTen)} · ${esc(item.maQuanLy)}</option>`).join('');$('#price-standard').value=options.prices.giaThuong;$('#price-vip').value=options.prices.giaVip;$('#rooms').innerHTML=options.rooms.length?options.rooms.map(item=>`<div class="stat"><span>${esc(item.tenPhong||item.maPhong)} · ${esc(item.loaiPhong||'')}</span><strong>${item.soGhe} ghế</strong><span>${item.soSuatChieu} suất đã lên lịch</span></div>`).join(''):'<div class="empty">Chưa có phòng chiếu.</div>'}
+    function renderSchedules(){const body=$('#schedules');body.innerHTML=schedules.length?schedules.map(item=>{const protectedOrder=item.soDonLienQuan>0||item.soVeDaBan>0||item.soGheDangGiu>0;return `<tr><td><strong>${esc(item.ngayChieu)}</strong><br>${esc(item.gioBatDau)}–${esc(item.gioKetThuc)}</td><td>${esc(item.tenPhim)}<br><span class="sub">${esc(item.maPhim)}</span></td><td>${esc(item.tenPhong)}<br><span class="sub">${esc(item.maPhong)}</span></td><td>${esc(item.tenQuanLy)}</td><td>${item.soGhe}${item.sucChua?` / ${item.sucChua}`:''}</td><td><span class="pill">${item.soVeDaBan} vé</span> <span class="pill">${item.soGheDangGiu} giữ</span></td><td><div class="actions"><button class="button secondary" type="button" data-edit="${esc(item.maSuatChieu)}" ${protectedOrder?'disabled title="Suất có giao dịch hoặc ghế đang giữ"':''}>Sửa</button><button class="button danger" type="button" data-delete="${esc(item.maSuatChieu)}" ${protectedOrder?'disabled title="Suất có giao dịch hoặc ghế đang giữ"':''}>Xóa</button></div></td></tr>`}).join(''):'<tr><td class="empty" colspan="7">Chưa có suất chiếu nào.</td></tr>'}
+    async function loadAll(){[options,schedules]=await Promise.all([api('/api/admin/schedules/options'),api('/api/admin/schedules')]);renderOptions();renderSchedules()}
+    function resetScheduleForm(){editingId=null;$('#schedule-form').reset();$('#schedule-form-title').textContent='Tạo suất chiếu';$('#save-schedule').textContent='Tạo suất chiếu';$('#cancel-edit').hidden=true}
+    function setEditing(item){editingId=item.maSuatChieu;$('#movie').value=item.maPhim;$('#room').value=item.maPhong;$('#manager').value=item.maQuanLy;$('#date').value=item.ngayChieu;$('#start').value=item.gioBatDau;$('#end').value=item.gioKetThuc;$('#schedule-form-title').textContent=`Sửa suất ${item.maSuatChieu}`;$('#save-schedule').textContent='Lưu thay đổi';$('#cancel-edit').hidden=false;$('#schedule-form').scrollIntoView({behavior:'smooth',block:'center'})}
+    async function initialize(){const me=await api('/api/auth/me');if(me.vaiTro!=='ADMIN'){location.href='/DangNhap.html';return}const tomorrow=new Date();tomorrow.setDate(tomorrow.getDate()+1);$('#date').min=dateValue(tomorrow);$('#date').value=dateValue(tomorrow);await loadAll()}
+    $('#prices-form').addEventListener('submit',async event=>{event.preventDefault();const button=event.currentTarget.querySelector('[type=submit]');button.disabled=true;try{options.prices=await api('/api/admin/schedules/prices',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({giaThuong:Number($('#price-standard').value),giaVip:Number($('#price-vip').value)})});$('#price-standard').value=options.prices.giaThuong;$('#price-vip').value=options.prices.giaVip;notice('Đã cập nhật giá vé. Đơn đã tạo không bị thay đổi.')}catch(error){notice(error.message,'error')}finally{button.disabled=false}});
+    $('#schedule-form').addEventListener('submit',async event=>{event.preventDefault();const button=$('#save-schedule');button.disabled=true;const payload={maPhim:$('#movie').value,maPhong:$('#room').value,maQuanLy:$('#manager').value,ngayChieu:$('#date').value,gioBatDau:$('#start').value,gioKetThuc:$('#end').value};try{await api(editingId?`/api/admin/schedules/${encodeURIComponent(editingId)}`:'/api/admin/schedules',{method:editingId?'PUT':'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});notice(editingId?'Đã cập nhật suất chiếu.':'Đã tạo suất chiếu.');resetScheduleForm();await loadAll()}catch(error){notice(error.message,'error')}finally{button.disabled=false}});
+    $('#cancel-edit').addEventListener('click',resetScheduleForm);$('#refresh').addEventListener('click',()=>loadAll().catch(error=>notice(error.message,'error')));
+    document.addEventListener('click',async event=>{const edit=event.target.closest('[data-edit]'),remove=event.target.closest('[data-delete]');if(edit){const item=schedules.find(row=>row.maSuatChieu===edit.dataset.edit);if(item)setEditing(item);return}if(remove){const id=remove.dataset.delete;if(!confirm(`Xóa suất chiếu ${id}? Chỉ xóa được suất chưa có vé, đơn hoặc ghế đang giữ.`))return;remove.disabled=true;try{const result=await api(`/api/admin/schedules/${encodeURIComponent(id)}`,{method:'DELETE'});notice(result.message);await loadAll()}catch(error){notice(error.message,'error');remove.disabled=false}}});
+    $('#logout').addEventListener('click',async()=>{try{await api('/api/auth/logout',{method:'POST'});location.href='/DangNhap.html'}catch(error){notice(error.message,'error')}});
+    initialize().catch(error=>{if(error.message.includes('đăng nhập')){location.href=`/DangNhap.html?next=${encodeURIComponent('/QuanTriLichChieu.html')}`;return}notice(error.message,'error')});
+  </script>
+  <script src="/ui-preferences.js"></script>
+</body>
+</html>

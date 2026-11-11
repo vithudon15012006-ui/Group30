@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#11131b">
+  <title>PTIT Cinema | Tài khoản</title>
+  <link rel="stylesheet" href="/ui-preferences.css">
+  <style>
+    :root{color-scheme:dark;--bg:#11131b;--panel:#1a1d28;--raised:#202431;--border:#303545;--text:#f4f4f6;--muted:#a5a9b8;--gold:#f5b942;--green:#68d6a0;--red:#ff737e;font-family:Inter,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--text)}
+    *{box-sizing:border-box}body{min-width:320px;min-height:100vh;margin:0;background:radial-gradient(ellipse at 80% -10%,rgb(130 37 49 / 30%),transparent 38rem),var(--bg)}
+    button,input{font:inherit}button,a{cursor:pointer}a{color:var(--gold);text-decoration:none}a:hover{text-decoration:underline}button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid rgb(245 185 66 / 60%);outline-offset:2px}
+    .shell{width:min(1020px,calc(100% - 32px));margin:auto}.top{height:74px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgb(255 255 255 / 8%)}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:800}.mark{display:grid;width:38px;height:38px;place-items:center;border-radius:12px;background:var(--gold);color:#21190a}.brand small{display:block;margin-top:3px;color:var(--muted);font-size:11px;font-weight:500;letter-spacing:.13em;text-transform:uppercase}
+    .layout{display:grid;grid-template-columns:1fr minmax(340px,440px);gap:54px;align-items:center;padding:56px 0}.story .eyebrow{color:var(--gold);font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}.story h1{max-width:520px;margin:12px 0;font-size:clamp(34px,5vw,58px);letter-spacing:-.05em;line-height:1.04}.story p{max-width:490px;color:var(--muted);line-height:1.7}.benefits{display:grid;gap:12px;margin-top:30px;color:#d9dbe3}.benefits div{display:flex;gap:10px;align-items:flex-start}.check{color:var(--gold);font-weight:900}
+    .card{padding:26px;border:1px solid var(--border);border-radius:20px;background:linear-gradient(145deg,rgb(255 255 255 / 3%),transparent 40%),var(--panel);box-shadow:0 24px 70px rgb(0 0 0 / 25%)}
+    .tabs{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:4px;border-radius:11px;background:#131620}.tab{min-height:40px;border:0;border-radius:8px;background:transparent;color:var(--muted);font-weight:700}.tab[aria-selected="true"]{background:var(--raised);color:var(--text)}
+    h2{margin:23px 0 6px;font-size:22px}.hint{margin:0 0 20px;color:var(--muted);font-size:13px;line-height:1.5}.form{display:grid;gap:13px}.field{display:grid;gap:7px}.field label{color:#d5d7df;font-size:12px;font-weight:700}.field input{width:100%;min-height:45px;padding:11px 12px;border:1px solid var(--border);border-radius:10px;background:#131620;color:var(--text)}.field input:focus{border-color:var(--gold);outline:0}.field input::placeholder{color:#777d8e}
+    .form[hidden]{display:none}
+    .primary{min-height:45px;margin-top:5px;border:0;border-radius:10px;background:var(--gold);color:#21190a;font-weight:850}.primary:hover{background:#ffd477}.primary:disabled{opacity:.55;cursor:wait}.links{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;margin-top:15px;font-size:12px}
+    .message{display:none;margin:0 0 15px;padding:12px 13px;border:1px solid var(--border);border-radius:10px;background:#202431;color:var(--text);font-size:13px;line-height:1.5}.message[data-kind=error]{border-color:rgb(255 115 126 / 50%);color:#ffdce0}.message[data-kind=success]{border-color:rgb(104 214 160 / 45%);color:#d7ffea}
+    .legal{margin:22px 0 0;color:#7f8494;font-size:11px;line-height:1.5}.footer{padding:0 0 24px;color:#777d8e;font-size:12px;text-align:center}
+    @media(max-width:780px){.layout{grid-template-columns:1fr;gap:25px;padding:35px 0}.story h1{font-size:39px}.benefits{margin-top:17px}.card{padding:21px}}
+  </style>
+</head>
+<body>
+  <header class="shell top">
+    <div class="brand"><span class="mark">P</span><span>PTIT Cinema<small>Khám phá · Đặt vé · Trải nghiệm</small></span></div>
+    <a href="/DatVe.html">Xem lịch chiếu</a>
+  </header>
+  <main class="shell layout">
+    <section class="story">
+      <div class="eyebrow">Rạp phim trong tầm tay</div>
+      <h1>Mỗi bộ phim, một trải nghiệm đáng nhớ.</h1>
+      <p>Tạo tài khoản để đặt chỗ yêu thích, quản lý vé và xem lại các giao dịch của bạn trong một nơi.</p>
+      <div class="benefits"><div><span class="check">✦</span><span>Chọn ghế và đồ ăn trước khi đến rạp.</span></div><div><span class="check">✦</span><span>Lịch sử hóa đơn và thông tin vé luôn sẵn sàng.</span></div><div><span class="check">✦</span><span>Đăng ký nhanh bằng số điện thoại.</span></div></div>
+    </section>
+    <section class="card" aria-label="Đăng nhập hoặc đăng ký">
+      <div class="tabs" role="tablist">
+        <button id="login-tab" class="tab" type="button" role="tab" aria-selected="true">Đăng nhập</button>
+        <button id="register-tab" class="tab" type="button" role="tab" aria-selected="false">Tạo tài khoản</button>
+      </div>
+      <div id="message" class="message" role="status" aria-live="polite"></div>
+      <form id="login-form" class="form">
+        <h2>Chào mừng trở lại</h2><p class="hint">Khách hàng đăng nhập bằng số điện thoại; nhân viên dùng email được cấp.</p>
+        <div class="field"><label for="login-identifier">Số điện thoại hoặc email nhân viên</label><input id="login-identifier" type="text" autocomplete="username" maxlength="254" placeholder="0901234567" required></div>
+        <div class="field"><label for="login-password">Mật khẩu</label><input id="login-password" type="password" autocomplete="current-password" required></div>
+        <button class="primary" type="submit">Đăng nhập an toàn</button>
+        <div class="links"><a href="/DatVe.html">Lịch chiếu</a></div>
+      </form>
+      <form id="register-form" class="form" hidden>
+        <h2>Tạo tài khoản khách hàng</h2><p class="hint">Đăng ký bằng số điện thoại và mật khẩu, không cần email hay mã xác minh.</p>
+        <div class="field"><label for="register-name">Họ và tên</label><input id="register-name" autocomplete="name" maxlength="50" placeholder="Nguyễn Văn An" required></div>
+        <div class="field"><label for="register-phone">Số điện thoại</label><input id="register-phone" type="tel" autocomplete="tel" maxlength="50" placeholder="0901 234 567" required></div>
+        <div class="field"><label for="register-password">Mật khẩu</label><input id="register-password" type="password" autocomplete="new-password" minlength="12" maxlength="72" placeholder="Ít nhất 12 ký tự" required></div>
+        <button class="primary" type="submit">Tạo tài khoản</button>
+      </form>
+      <p class="legal">Không chia sẻ mật khẩu. Nhân viên và quản trị viên được cấp quyền riêng, không đăng ký qua biểu mẫu khách hàng.</p>
+    </section>
+  </main>
+  <footer class="shell footer">PTIT Cinema · Tài khoản được bảo vệ bằng mã hóa mật khẩu</footer>
+  <script>
+    const $ = selector => document.querySelector(selector);
+    let csrf = null;
+    async function request(url, options = {}) {
+      const settings = { ...options, headers: { ...(options.headers || {}) } };
+      if (settings.method && settings.method !== 'GET') {
+        csrf ||= await fetch('/api/auth/csrf').then(response => response.json());
+        settings.headers[csrf.headerName] = csrf.token;
+      }
+      const response = await fetch(url, settings);
+      const body = response.status === 204 ? '' : await response.text();
+      let data = null;
+      if (body) {
+        try { data = JSON.parse(body); } catch {
+          if (response.status >= 500) {
+            throw new Error('Máy chủ gặp lỗi. Hãy kiểm tra log Spring Boot; nếu chưa chuyển sang đăng nhập bằng số điện thoại, cần import migration V2.');
+          }
+        }
+      }
+      if (!response.ok) throw new Error(data?.message || `Yêu cầu chưa thể hoàn tất (HTTP ${response.status}).`);
+      return data;
+    }
+    function showMessage(text, kind = 'success') {
+      const element = $('#message'); element.textContent = text; element.dataset.kind = kind; element.style.display = 'block';
+    }
+    function switchTab(register) {
+      $('#login-tab').setAttribute('aria-selected', String(!register));
+      $('#register-tab').setAttribute('aria-selected', String(register));
+      $('#login-form').hidden = register; $('#register-form').hidden = !register;
+      $('#message').style.display = 'none';
+    }
+    function safeNext(value) {
+      return value && value.startsWith('/') && !value.startsWith('//') && !value.includes('\\') ? value : '/TaiKhoan.html';
+    }
+    $('#login-tab').addEventListener('click', () => switchTab(false));
+    $('#register-tab').addEventListener('click', () => switchTab(true));
+    $('#register-form').addEventListener('submit', async event => {
+      event.preventDefault();
+      const button = event.currentTarget.querySelector('button[type=submit]'); button.disabled = true;
+      try {
+        const result = await request('/api/auth/register', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({
+          hoTen: $('#register-name').value.trim(), sdt: $('#register-phone').value.trim(),
+          matKhau: $('#register-password').value
+        }) });
+        switchTab(false);
+        $('#login-identifier').value = $('#register-phone').value.trim();
+        showMessage(result.message);
+      } catch (error) { showMessage(error.message, 'error'); }
+      finally { button.disabled = false; }
+    });
+    $('#login-form').addEventListener('submit', async event => {
+      event.preventDefault();
+      const button = event.currentTarget.querySelector('button[type=submit]'); button.disabled = true;
+      try {
+        const account = await request('/api/auth/login', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({
+          identifier: $('#login-identifier').value.trim(), matKhau: $('#login-password').value
+        }) });
+        const next = new URLSearchParams(location.search).get('next');
+        location.href = next ? safeNext(next) : (account.vaiTro === 'ADMIN' ? '/QuanTri.html' : account.vaiTro === 'STAFF' ? '/Database.html' : '/TaiKhoan.html');
+      } catch (error) { showMessage(error.message, 'error'); }
+      finally { button.disabled = false; }
+    });
+    request('/api/auth/me').then(account => { if (account.vaiTro === 'ADMIN') location.href = '/QuanTri.html'; else if (account.vaiTro === 'CUSTOMER') location.href = '/TaiKhoan.html'; }).catch(() => {});
+  </script>
+  <script src="/ui-preferences.js"></script>
+</body>
+</html>

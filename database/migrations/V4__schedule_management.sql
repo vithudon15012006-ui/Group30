@@ -1,0 +1,19 @@
+USE QuanLyRapChieuPhim;
+
+ALTER TABLE SuatChieu
+    ADD KEY IX_SuatChieu_Phong_Ngay_Gio (MaPhong, NgayChieu, GioBatDau, GioKetThuc);
+
+CREATE TABLE CauHinhGiaVe (
+    LoaiGhe VARCHAR(10) NOT NULL,
+    Gia INT NOT NULL,
+    CapNhatLuc TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CapNhatBoi CHAR(36) NULL,
+    PRIMARY KEY (LoaiGhe),
+    CONSTRAINT CK_CauHinhGiaVe_LoaiGhe CHECK (LoaiGhe IN ('THUONG', 'VIP')),
+    CONSTRAINT CK_CauHinhGiaVe_Gia CHECK (Gia BETWEEN 1000 AND 10000000),
+    CONSTRAINT FK_CauHinhGiaVe_TaiKhoan FOREIGN KEY (CapNhatBoi)
+        REFERENCES TaiKhoan(MaTaiKhoan) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+INSERT INTO CauHinhGiaVe (LoaiGhe, Gia)
+VALUES ('THUONG', 100000), ('VIP', 50000);
