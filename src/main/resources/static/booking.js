@@ -196,7 +196,14 @@ function drawProducts() {
 }
 async function loadSession() {
   const response = await fetch("/api/auth/me");
-  if (!response.ok) return;
+  if (response.status === 401 || response.status === 403) {
+    location.replace("/DangNhap.html?next=%2FDatVe.html");
+    return;
+  }
+  if (!response.ok) {
+    document.documentElement.classList.remove("checking-session");
+    throw new Error("Không thể kiểm tra đăng nhập.");
+  }
   account = await response.json();
   const link = $("account-link");
   if (account.vaiTro === "CUSTOMER") {
@@ -279,12 +286,14 @@ $("checkout-form").addEventListener("submit",async e=>{
 $("close-receipt").addEventListener("click",()=>$("receipt").close());
 $("print-receipt").addEventListener("click",()=>window.print());
 async function initialize() {
+  await loadSession();
+  if (!account) return;
+  document.documentElement.classList.remove("checking-session");
   note("Đang tải danh sách phim…");
   const list = await request("/phim");
   movies = list.map(m => ({id:m.maPhim,name:m.tenPhim,minutes:m.thoiLuong,genres:m.theLoai}));
   drawMovies();
   note("");
-  await loadSession();
   if (account?.vaiTro !== "CUSTOMER") return;
   const saved = JSON.parse(sessionStorage.getItem(resumeKey) || "null");
   sessionStorage.removeItem(resumeKey);

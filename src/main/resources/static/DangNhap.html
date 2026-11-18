@@ -36,6 +36,7 @@
     .card .login-field input:focus{border-bottom-color:#E4302F;outline:none}
     .card .login-field label{position:absolute;left:0;top:15px;pointer-events:none;font-size:13px;font-weight:400;color:#666;transition:top .15s,font-size .15s}
     .card .login-field input:focus + label,.card .login-field input:not(:placeholder-shown) + label{top:-6px;font-size:11px}
+    input[type="password"]::-ms-reveal, input[type="password"]::-ms-clear { display:none; }
     .password-toggle{position:absolute;right:0;top:6px;width:32px;height:32px;padding:5px;border:0;background:transparent;color:#86796F;display:grid;place-items:center}
     .password-toggle svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.5}
     .password-toggle[aria-pressed="true"] .eye-slash{display:none}
@@ -183,9 +184,6 @@
       $('#login-form').hidden = register; $('#register-form').hidden = !register;
       $('#message').style.display = 'none';
     }
-    function safeNext(value) {
-      return value && value.startsWith('/') && !value.startsWith('//') && !value.includes('\\') ? value : '/DatVe.html';
-    }
     $('#login-tab').addEventListener('click', () => switchTab(false));
     $('#register-tab').addEventListener('click', () => switchTab(true));
     $('#register-form').addEventListener('submit', async event => {
@@ -214,12 +212,11 @@
         const account = await request('/api/auth/login', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({
           identifier: $('#login-identifier').value.trim(), matKhau: $('#login-password').value
         }) });
-        const next = new URLSearchParams(location.search).get('next');
-        location.href = next ? safeNext(next) : (account.vaiTro === 'ADMIN' ? '/QuanTri.html' : account.vaiTro === 'STAFF' ? '/Database.html' : '/DatVe.html');
+        location.href = account.vaiTro === 'ADMIN' ? '/QuanTri.html' : account.vaiTro === 'STAFF' ? '/Database.html' : '/DatVe.html';
       } catch (error) { showMessage(error.message, 'error'); }
       finally { loginPending = false; updateLoginButton(); }
     });
-    request('/api/auth/me').then(account => { if (account.vaiTro === 'ADMIN') location.href = '/QuanTri.html'; else if (account.vaiTro === 'CUSTOMER') location.href = '/DatVe.html'; }).catch(() => {});
+    request('/api/auth/me').then(account => { if (account.vaiTro === 'ADMIN') location.href = '/QuanTri.html'; else if (account.vaiTro === 'STAFF') location.href = '/Database.html'; else if (account.vaiTro === 'CUSTOMER') location.href = '/DatVe.html'; }).catch(() => {});
   </script>
   <script src="/ui-preferences.js"></script>
 </body>
