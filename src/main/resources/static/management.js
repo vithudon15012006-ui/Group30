@@ -73,15 +73,28 @@ function render() {
   const result = document.createDocumentFragment();
   for (const row of filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE)) {
     const tr = make("tr");
-    for (const [key] of spec.cols) tr.append(make("td", row[key] ?? "—"));
+    for (const [key, , type] of spec.cols) {
+      const value = row[key];
+      let text = value ?? "—";
+      if (value != null && type === "number" && Number.isFinite(Number(value))) {
+        const currency = key === "doanhThuUsd" ? "USD" : ["Gia", "ThanhTien", "LuongCung", "LuongTheoGio"].includes(key) ? "VND" : null;
+        text = new Intl.NumberFormat("vi-VN", currency
+          ? { style: "currency", currency, maximumFractionDigits: 0 }
+          : { maximumFractionDigits: 0 }).format(Number(value));
+      } else if (value != null && type === "date" && /^\d{4}-\d{2}-\d{2}$/.test(String(value))) {
+        text = new Intl.DateTimeFormat("vi-VN").format(new Date(`${value}T00:00:00`));
+      }
+      tr.append(make("td", text));
+    }
     if (canEdit() || detailSpecs[spec.slug]) {
       const cell = make("td"); cell.className = "actions";
       const edit = make("button", "Sửa"), remove = make("button", "Xóa");
+      edit.className = "edit";
       edit.type = remove.type = "button"; remove.className = "delete";
       edit.addEventListener("click", () => showEdit(row));
       remove.addEventListener("click", () => deleteRow(row));
       if (detailSpecs[spec.slug]) {
-        const detail = make("button", "Chi tiết"); detail.type = "button";
+        const detail = make("button", "Chi tiết"); detail.type = "button"; detail.className = "details";
         detail.addEventListener("click", () => showDetails(row));
         cell.append(detail);
       }

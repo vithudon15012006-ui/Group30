@@ -6,10 +6,10 @@
   --raised: #edf0f7;
   --border: #d7dce7;
   --text: #202434;
-  --muted: #626b7e;
-  --accent: #aa6b00;
-  --accent-strong: #855300;
-  --gold: #aa6b00;
+  --muted: #535e72;
+  --accent: #a91434;
+  --accent-strong: #86102a;
+  --gold: #94132e;
   --green: #18764b;
   --red: #bd3443;
 }
@@ -24,11 +24,37 @@
 :root[data-theme="light"] .order,
 :root[data-theme="light"] .food-item,
 :root[data-theme="light"] .showtime,
+:root[data-theme="light"] .payment,
+:root[data-theme="light"] .stat,
 :root[data-theme="light"] .demo-note,
 :root[data-theme="light"] .notice,
 :root[data-theme="light"] .message {
   background: var(--panel) !important;
   color: var(--text);
+}
+
+:root[data-theme="light"] .payment {
+  border-color: var(--border);
+}
+
+:root[data-theme="light"] .payment h3,
+:root[data-theme="light"] .payment .seat-list {
+  color: var(--text);
+}
+
+:root[data-theme="light"] .payment .meta,
+:root[data-theme="light"] .stat span,
+:root[data-theme="light"] .empty,
+:root[data-theme="light"] .info,
+:root[data-theme="light"] .legal,
+:root[data-theme="light"] .footer,
+:root[data-theme="light"] .hint,
+:root[data-theme="light"] .story .benefits {
+  color: var(--muted);
+}
+
+:root[data-theme="light"] .story .benefits .check {
+  color: var(--accent);
 }
 
 :root[data-theme="light"] input,
@@ -41,12 +67,24 @@
   color: var(--text);
 }
 
+:root[data-theme="light"] .field input,
+:root[data-theme="light"] .filters select {
+  border-color: var(--border);
+  background: #ffffff !important;
+  color: var(--text);
+}
+
+:root[data-theme="light"] .field input::placeholder {
+  color: var(--muted);
+}
+
 :root[data-theme="light"] .seat[data-selected="true"],
 :root[data-theme="light"] .button-primary,
 :root[data-theme="light"] .primary,
 :root[data-theme="light"] .button:not(.button-secondary):not(.button-quiet):not(.button-delete) {
-  background-color: #edb641;
-  color: #21190a;
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
 }
 
 :root[data-theme="light"] .seat:disabled {
@@ -55,8 +93,42 @@
 }
 
 :root[data-theme="light"] .pay-option,
-:root[data-theme="light"] .field label {
+:root[data-theme="light"] .field label,
+:root[data-theme="light"] .story,
+:root[data-theme="light"] .story h1,
+:root[data-theme="light"] .story h2 {
   color: var(--text);
+}
+
+:root[data-theme="light"] .payment .button.secondary {
+  border-color: var(--border);
+  background: var(--raised);
+  color: var(--text);
+}
+
+:root[data-theme="light"] .payment .button.danger {
+  border-color: #a5283b;
+  background: #a5283b;
+  color: #fff;
+}
+
+:root[data-theme="light"] .story .eyebrow,
+:root[data-theme="light"] .hero .eyebrow,
+:root[data-theme="light"] .amount {
+  color: var(--accent-strong);
+}
+
+:root[data-theme="light"] .legal {
+  color: #535e72;
+}
+
+:root[data-theme="light"] .footer {
+  color: #535e72;
+}
+
+.ui-preferences select,
+.ui-preferences button {
+  color-scheme: light dark;
 }
 
 .ui-preferences {

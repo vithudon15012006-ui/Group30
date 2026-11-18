@@ -31,7 +31,7 @@ button:focus-visible,input:focus-visible,select:focus-visible { outline:2px soli
 .secondary:hover,.movie:hover,.show:hover:not(:disabled) { border-color:var(--brand) }
 .movies { display:grid;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr));gap:12px }
 .movie,.show { text-align:left;border-color:var(--edge);padding:14px }
-.movie { border-left:4px solid #b9193c;min-height:98px }
+.movie { border-left:4px solid var(--brand);min-height:98px }
 .movie strong,.movie span,.show strong,.show span { display:block }
 .movie strong { font-size:17px }
 .movie span,.show span { font-size:14px;color:var(--muted);margin-top:4px }
@@ -43,7 +43,7 @@ button:focus-visible,input:focus-visible,select:focus-visible { outline:2px soli
 .seat-row b { min-width:22px }
 .seat-row div { display:flex;flex-wrap:wrap;gap:6px }
 .seat { min-width:45px;padding:5px 6px;font-size:14px }
-.vip { background:#fff4d7;border-color:#d69b32 }
+.vip { background:#fff0f3;border-color:var(--brand) }
 .sold { background:#dddbe1;border-color:#c7c5cd;text-decoration:line-through }
 .chosen { background:var(--brand);color:white;border-color:var(--brand) }
 .legend { display:flex;flex-wrap:wrap;gap:12px;margin-top:16px;font-size:13px }
