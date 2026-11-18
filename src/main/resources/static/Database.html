@@ -9,32 +9,35 @@
   <link rel="stylesheet" href="/management.css">
   <link rel="stylesheet" href="/ui-preferences.css">
   <script src="/management.js" defer></script>
+  <link rel="stylesheet" href="/admin-shell.css">
 </head>
-<body class="admin">
-  <header class="mast">
-    <div class="site-bar">
-      <a class="site-brand" href="/Database.html"><img src="/ptit-logo.png" width="44" height="44" alt=""><span>PTIT Cinema<small>Nhóm 30</small></span></a>
-      <nav class="site-nav" aria-label="Điều hướng chính">
-        <a href="/Database.html" aria-current="page">Quản lý</a>
-        <a id="admin-home" href="/QuanTri.html" hidden>Quản trị</a>
-        <button id="logout" type="button" hidden>Đăng xuất</button>
-      </nav>
-    </div>
+<body class="admin admin-shell">
+  <header class="admin-sidebar">
+    <a class="admin-brand" href="/Database.html">
+      <img src="/ptit-logo.png" width="40" height="40" alt="">
+      <span>PTIT Cinema</span>
+    </a>
+    <nav class="admin-menu" aria-label="Điều hướng quản trị">
+      <a href="/QuanTri.html" data-admin-only hidden><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>Dashboard</span></a>
+      <a href="/Database.html" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 4 16 4 16 0V5M4 12c0 4 16 4 16 0"/></svg><span>Quản lý dữ liệu</span></a>
+      <a href="/QuanTriLichChieu.html" data-admin-only hidden><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 2v6m10-6v6M3 11h18m-13 4h3m3 0h3"/></svg><span>Phòng chiếu và giá vé</span></a>
+      <a href="/QuanTriThanhToan.html" data-admin-only hidden><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 10h20M6 15h5"/></svg><span>Thanh toán</span></a>
+      <button id="logout" type="button" hidden>Đăng xuất</button>
+    </nav>
   </header>
+  <header class="admin-topbar" data-ui-preferences><span class="admin-page-label">Quản lý dữ liệu</span></header>
   <main>
-    <h1>Quản lý dữ liệu rạp chiếu phim</h1>
     <section aria-labelledby="table-title">
       <div class="toolbar">
         <label for="catalog">Danh mục</label>
         <select id="catalog"></select>
       </div>
       <h2 id="table-title">Phim</h2>
-      <p id="catalog-workflow" hidden><a id="catalog-link"></a></p>
       <form id="search-form" class="toolbar">
         <input id="search" type="search" aria-label="Tìm trong danh mục" placeholder="Tìm theo mã, tên hoặc nội dung">
-        <button type="submit">Tìm</button>
-        <button type="button" id="reload">Tải lại</button>
-        <button type="button" id="add">Thêm mới</button>
+        <button class="catalog-icon" type="submit" aria-label="Tìm kiếm" title="Tìm kiếm"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></button>
+        <button class="catalog-icon catalog-add" type="button" id="add" aria-label="Thêm mới"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span class="catalog-tooltip" role="tooltip">Thêm mới</span></button>
+        <button class="catalog-icon" type="button" id="reload" aria-label="Tải lại" title="Tải lại"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10a8 8 0 1 0 0 5M20 4v6h-6"/></svg></button>
       </form>
       <p class="message" id="message" role="status" aria-live="polite"></p>
       <div class="table-wrap"><table><thead id="headers"></thead><tbody id="rows"></tbody></table></div>
@@ -68,5 +71,6 @@
     </dialog>
   </main>
   <script src="/ui-preferences.js"></script>
+  <script src="/admin-account.js"></script>
 </body>
 </html>

@@ -67,7 +67,11 @@ public class AuthController {
         String role = authentication.getAuthorities().stream()
                 .map(authority -> authority.getAuthority().replaceFirst("^ROLE_", ""))
                 .findFirst().orElse("");
-        return ResponseEntity.ok(Map.of("maTaiKhoan", authentication.getName(), "vaiTro", role));
+        AccountView account = accounts.currentAccount(authentication.getName());
+        return ResponseEntity.ok(Map.of(
+                "maTaiKhoan", authentication.getName(), "vaiTro", role,
+                "email", account.email() == null ? "" : account.email(),
+                "hoTen", account.hoTen() == null ? "" : account.hoTen()));
     }
 
     @PostMapping("/register")

@@ -1,0 +1,73 @@
+<link rel="stylesheet" href="/customer-account.css" />
+<div id="message" class="message" role="status" aria-live="polite"></div>
+<dialog id="profile-dialog">
+  <div class="profile-dialog-head">
+    <h2>Tài khoản</h2>
+    <button id="close-profile" type="button" aria-label="Đóng">×</button>
+  </div>
+  <div class="grid">
+    <section class="panel">
+      <div class="head">
+        <h2>Thông tin cá nhân</h2>
+        <p>Số điện thoại là tên đăng nhập của tài khoản khách hàng.</p>
+      </div>
+      <div class="body">
+        <form id="profile-form" class="form">
+          <div class="field">
+            <label for="name">Họ và tên</label
+            ><input id="name" maxlength="50" autocomplete="name" required />
+          </div>
+          <div class="field">
+            <label for="phone">Số điện thoại đăng nhập</label
+            ><input id="phone" maxlength="50" autocomplete="tel" required />
+          </div>
+          <button class="button" type="submit">Lưu thông tin</button>
+        </form>
+      </div>
+    </section>
+    <section class="panel">
+      <div class="head">
+        <h2>Đổi mật khẩu</h2>
+        <p>Dùng mật khẩu dài, riêng biệt cho tài khoản này.</p>
+      </div>
+      <div class="body">
+        <form id="password-form" class="form">
+          <div class="field">
+            <label for="old-password">Mật khẩu hiện tại</label
+            ><input
+              id="old-password"
+              type="password"
+              autocomplete="current-password"
+              required
+            />
+          </div>
+          <div class="field">
+            <label for="new-password">Mật khẩu mới</label
+            ><input
+              id="new-password"
+              type="password"
+              minlength="12"
+              maxlength="72"
+              autocomplete="new-password"
+              required
+            />
+          </div>
+          <button class="button secondary" type="submit">
+            Cập nhật mật khẩu
+          </button>
+        </form>
+      </div>
+    </section>
+    <section class="panel wide">
+      <div class="head">
+        <h2>Lịch sử đặt vé và giao dịch</h2>
+        <p>Chỉ các hóa đơn thuộc tài khoản của bạn mới hiển thị ở đây.</p>
+      </div>
+      <div class="body">
+        <div id="orders" class="order-list">
+          <div class="empty">Đang tải giao dịch…</div>
+        </div>
+      </div>
+    </section>
+  </div>
+</dialog>

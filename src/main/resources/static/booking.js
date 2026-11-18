@@ -200,7 +200,9 @@ async function loadSession() {
   account = await response.json();
   const link = $("account-link");
   if (account.vaiTro === "CUSTOMER") {
-    link.textContent = "Tài khoản";
+    link.innerHTML = '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/></svg>';
+    link.setAttribute('aria-label','Tài khoản');
+
     link.href = "/TaiKhoan.html";
   } else {
     link.textContent = "Quản lý";

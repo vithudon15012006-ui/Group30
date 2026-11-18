@@ -1,0 +1,18 @@
+@import url("/vietnamese-font.css");
+body,
+button,
+input,
+select,
+textarea {
+  font-family: "Be Vietnam Pro", Arial, sans-serif;
+}
+
+.card .primary {
+  font-family: "Be Vietnam Pro", Arial, sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.6;
+  letter-spacing: 0;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}

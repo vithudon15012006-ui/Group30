@@ -196,3 +196,5 @@
     font-size: 11px;
   }
 }
+
+body, button, input, select, textarea { font-family: Arial, sans-serif; }

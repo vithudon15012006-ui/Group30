@@ -7,7 +7,7 @@ import java.util.List;
 public final class AccountModels {
     private AccountModels() {}
 
-    public record RegisterRequest(String hoTen, String sdt, String matKhau) {}
+    public record RegisterRequest(String hoTen, String sdt, String matKhau, String email) {}
 
     public record LoginRequest(String identifier, String matKhau) {}
 
@@ -19,7 +19,7 @@ public final class AccountModels {
 
     public record StaffInviteRequest(String maNhanVien, String email) {}
 
-    public record AccountView(String vaiTro, String hoTen, String sdt) {}
+    public record AccountView(String vaiTro, String hoTen, String sdt, String email) {}
 
     public record LockedAccount(
             String maTaiKhoan,

@@ -43,7 +43,14 @@ public class AccountService {
     public void register(RegisterRequest request) {
         String name = requiredText(request.hoTen(), "Vui lòng nhập họ tên.", 50);
         String phone = LoginIdentifier.normalizePhone(request.sdt());
-        PasswordPolicy.validate(request.matKhau());
+        PasswordPolicy.validateRegistration(request.matKhau());
+        String email = null;
+        if (request.email() != null && !request.email().isBlank()) {
+            email = normalizeEmail(request.email());
+            if (email.length() > 50) {
+                throw new IllegalArgumentException("Email chỉ được tối đa 50 ký tự.");
+            }
+        }
 
         if (jdbc.queryForObject("SELECT COUNT(*) FROM TaiKhoan WHERE SoDienThoaiDangNhap = ?", Integer.class, phone) > 0) {
             throw new IllegalArgumentException("Số điện thoại này đã có tài khoản. Hãy đăng nhập bằng số điện thoại đó.");
@@ -53,8 +60,8 @@ public class AccountService {
         String accountId = UUID.randomUUID().toString();
         jdbc.update("""
                 INSERT INTO KhachHang (MaKhachHang, HoTen, Sdt, Email)
-                VALUES (?, ?, ?, NULL)
-                """, customerId, name, phone);
+                VALUES (?, ?, ?, ?)
+                """, customerId, name, phone, email);
         jdbc.update("""
                 INSERT INTO TaiKhoan
                     (MaTaiKhoan, Email, SoDienThoaiDangNhap, MatKhauHash, VaiTro, MaKhachHang, EmailDaXacMinh)
@@ -64,7 +71,7 @@ public class AccountService {
 
     public AccountView currentAccount(String accountId) {
         return jdbc.query("""
-                SELECT A.VaiTro, K.HoTen, K.Sdt
+                SELECT A.VaiTro, K.HoTen, K.Sdt, COALESCE(A.Email, K.Email) AS Email
                 FROM TaiKhoan A
                 LEFT JOIN KhachHang K ON K.MaKhachHang = A.MaKhachHang
                 WHERE A.MaTaiKhoan = ?
@@ -73,7 +80,8 @@ public class AccountService {
             return new AccountView(
                     rs.getString("VaiTro"),
                     rs.getString("HoTen"),
-                    rs.getString("Sdt")
+                    rs.getString("Sdt"),
+                    rs.getString("Email")
             );
         }, accountId);
     }

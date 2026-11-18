@@ -1,64 +1,141 @@
 <!doctype html>
 <html lang="vi">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Đặt vé phim | PTIT Cinema</title>
-  <link rel="icon" href="/ptit-logo.png">
-  <link rel="stylesheet" href="/booking.css">
-  <script src="/booking.js" defer></script>
-</head>
-<body>
-  <header class="mast"><div class="container brand"><img src="/ptit-logo.png" width="46" height="46" alt="Logo PTIT"><div><strong>PTIT Cinema</strong><small>Nhóm 30</small></div>
-    <nav class="booking-nav" aria-label="Tài khoản"><a id="account-link" href="/DangNhap.html?next=%2FDatVe.html">Đăng nhập</a><button id="logout" type="button" hidden>Đăng xuất</button></nav>
-  </div></header>
-  <main class="container">
-    <div class="intro"><h1>Đặt vé xem phim</h1></div>
-    <p id="notice" role="status" aria-live="polite" hidden></p>
-    <section id="movies" class="panel">
-      <div class="panel-head"><h2>Phim có suất chiếu</h2><input type="search" id="movie-search" aria-label="Tìm phim" placeholder="Tìm theo tên phim…"></div>
-      <div id="movie-list" class="movies"></div>
-    </section>
-    <section id="shows" class="panel" hidden>
-      <button type="button" class="link" id="back-movies">← Tất cả phim</button>
-      <div class="panel-head"><div><h2 id="show-title"></h2></div><label>Ngày chiếu <select id="show-date"></select></label></div>
-      <div id="show-list" class="shows"></div>
-    </section>
-    <section id="seats" class="panel" hidden>
-      <button type="button" class="link" id="back-shows">← Chọn suất khác</button>
-      <div class="panel-head"><div><h2>Chọn ghế</h2><p id="seat-show"></p></div><button id="reload-seats" type="button" class="secondary">Cập nhật ghế</button></div>
-      <div class="seat-layout">
-        <div>
-          <div class="screen">MÀN HÌNH</div>
-          <div id="seat-map" aria-label="Sơ đồ ghế"></div>
-          <div class="legend"><span><i></i>Ghế thường</span><span><i class="vip"></i>VIP</span><span><i class="chosen"></i>Đang chọn</span><span><i class="sold"></i>Đã bán</span></div>
-        </div>
-        <aside class="cart" aria-label="Thông tin đặt vé">
-          <h3>Vé của bạn</h3><p id="seat-selection">Chưa chọn ghế</p>
-          <div class="total"><span>Tạm tính</span><strong id="seat-total">0 ₫</strong></div>
-          <button class="primary" type="button" id="checkout" disabled>Tiếp tục</button>
-        </aside>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Đặt vé phim | PTIT Cinema</title>
+    <link rel="icon" href="/ptit-logo.png" />
+    <link rel="stylesheet" href="/booking.css" />
+    <script src="/booking.js" defer></script>
+    <script src="/customer-account.js" defer></script>
+    <script src="/customer-menu.js" defer></script>
+  </head>
+  <body>
+    <header class="mast">
+      <div class="container brand">
+        <img src="/ptit-logo.png" width="46" height="46" alt="Logo PTIT" />
+        <div><strong>PTIT Cinema</strong><small>Nhóm 30</small></div>
+        <nav class="booking-nav" aria-label="Tài khoản">
+          <a id="account-link" href="/DangNhap.html?next=%2FDatVe.html"
+            >Đăng nhập</a
+          ><button id="logout" type="button" hidden>Đăng xuất</button>
+        </nav>
       </div>
-    </section>
-  </main>
-  <dialog id="checkout-dialog" aria-labelledby="checkout-title">
-    <form id="checkout-form">
-      <h2 id="checkout-title">Xác nhận đặt vé</h2>
-      <p id="checkout-summary"></p>
-      <p id="customer-summary"></p>
-      <fieldset id="extras" hidden><legend>Đồ ăn và thức uống</legend><div id="products"></div></fieldset>
-      <label>Hình thức thanh toán <select name="payment" id="payment"><option>Tiền mặt</option><option>Chuyển khoản</option></select></label>
-      <p id="payment-note" class="hint" hidden></p>
-      <p id="checkout-error" class="error" role="alert" hidden></p>
-      <div class="actions"><button type="button" class="secondary" id="cancel-checkout">Quay lại</button><button type="submit" class="primary" id="buy">Xác nhận và nhận vé</button></div>
-    </form>
-  </dialog>
-  <dialog id="receipt" aria-labelledby="receipt-title">
-    <div class="receipt-head"><span id="receipt-badge" class="badge">VÉ ĐIỆN TỬ</span><h2 id="receipt-title">Đặt vé thành công</h2></div>
-    <div id="receipt-info"></div>
-    <ul id="receipt-tickets"></ul>
-    <div id="transfer-details" hidden></div>
-    <div class="actions"><button type="button" class="secondary" id="close-receipt">Đóng</button><button type="button" class="primary" id="print-receipt">In / Lưu PDF</button></div>
-  </dialog>
-</body>
+    </header>
+    <main class="container">
+      <div class="intro"><h1>Đặt vé xem phim</h1></div>
+      <p id="notice" role="status" aria-live="polite" hidden></p>
+      <section id="movies" class="panel">
+        <div class="panel-head">
+          <h2>Phim có suất chiếu</h2>
+          <div class="movie-search-wrap">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="10.5" cy="10.5" r="6.5" />
+              <path d="m16 16 5 5" /></svg
+            ><input
+              type="search"
+              id="movie-search"
+              aria-label="Tìm phim"
+              placeholder="Tìm theo tên phim…"
+            />
+          </div>
+        </div>
+        <div id="movie-list" class="movies"></div>
+      </section>
+      <section id="shows" class="panel" hidden>
+        <button type="button" class="link" id="back-movies">
+          ← Tất cả phim
+        </button>
+        <div class="panel-head">
+          <div><h2 id="show-title"></h2></div>
+          <label
+            >Ngày chiếu
+            <select id="show-date"></select
+          ></label>
+        </div>
+        <div id="show-list" class="shows"></div>
+      </section>
+      <section id="seats" class="panel" hidden>
+        <button type="button" class="link" id="back-shows">
+          ← Chọn suất khác
+        </button>
+        <div class="panel-head">
+          <div>
+            <h2>Chọn ghế</h2>
+            <p id="seat-show"></p>
+          </div>
+          <button id="reload-seats" type="button" class="secondary">
+            Cập nhật ghế
+          </button>
+        </div>
+        <div class="seat-layout">
+          <div>
+            <div class="screen">MÀN HÌNH</div>
+            <div id="seat-map" aria-label="Sơ đồ ghế"></div>
+            <div class="legend">
+              <span><i></i>Ghế thường</span><span><i class="vip"></i>VIP</span
+              ><span><i class="chosen"></i>Đang chọn</span
+              ><span><i class="sold"></i>Đã bán</span>
+            </div>
+          </div>
+          <aside class="cart" aria-label="Thông tin đặt vé">
+            <h3>Vé của bạn</h3>
+            <p id="seat-selection">Chưa chọn ghế</p>
+            <div class="total">
+              <span>Tạm tính</span><strong id="seat-total">0 ₫</strong>
+            </div>
+            <button class="primary" type="button" id="checkout" disabled>
+              Tiếp tục
+            </button>
+          </aside>
+        </div>
+      </section>
+    </main>
+    <dialog id="checkout-dialog" aria-labelledby="checkout-title">
+      <form id="checkout-form">
+        <h2 id="checkout-title">Xác nhận đặt vé</h2>
+        <p id="checkout-summary"></p>
+        <p id="customer-summary"></p>
+        <fieldset id="extras" hidden>
+          <legend>Đồ ăn và thức uống</legend>
+          <div id="products"></div>
+        </fieldset>
+        <label
+          >Hình thức thanh toán
+          <select name="payment" id="payment">
+            <option>Tiền mặt</option>
+            <option>Chuyển khoản</option>
+          </select></label
+        >
+        <p id="payment-note" class="hint" hidden></p>
+        <p id="checkout-error" class="error" role="alert" hidden></p>
+        <div class="actions">
+          <button type="button" class="secondary" id="cancel-checkout">
+            Quay lại</button
+          ><button type="submit" class="primary" id="buy">
+            Xác nhận và nhận vé
+          </button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="receipt" aria-labelledby="receipt-title">
+      <div class="receipt-head">
+        <span id="receipt-badge" class="badge">VÉ ĐIỆN TỬ</span>
+        <h2 id="receipt-title">Đặt vé thành công</h2>
+      </div>
+      <div id="receipt-info"></div>
+      <ul id="receipt-tickets"></ul>
+      <div id="transfer-details" hidden></div>
+      <div class="actions">
+        <button type="button" class="secondary" id="close-receipt">Đóng</button
+        ><button type="button" class="primary" id="print-receipt">
+          In / Lưu PDF
+        </button>
+      </div>
+    </dialog>
+    <dialog id="customer-account">
+      <button id="close-account" type="button" aria-label="Đóng">×</button>
+      <div id="account-content"></div>
+    </dialog>
+  </body>
 </html>

@@ -1,20 +1,16 @@
 (() => {
   const pairs = [
+    ['Số điện thoại / Email', 'Phone number / Email'],
+    ['Vui lòng đăng nhập để đặt vé', 'Sign in to book tickets'],
+    ['Sai định dạng', 'Invalid format'],
+    ['Có 8 đến 16 ký tự', '8 to 16 characters'],
+    ['Ít nhất 1 chữ in hoa, 1 chữ thường', 'At least 1 uppercase and 1 lowercase letter'],
+    ['Ít nhất 1 chữ số, 1 ký tự đặc biệt', 'At least 1 digit and 1 special character'],
+    ['Hiện mật khẩu', 'Show password'],
+    ['Ẩn mật khẩu', 'Hide password'],
     ['Hệ thống quản lý rạp chiếu phim', 'Cinema management system'],
     ['Trải nghiệm điện ảnh của bạn', 'Your movie experience'],
-    ['Mỗi bộ phim, một trải nghiệm đáng nhớ.', 'Every movie, an experience to remember.'],
-    ['Tạo tài khoản để đặt chỗ yêu thích, quản lý vé và xem lại các giao dịch của bạn trong một nơi.', 'Create an account to reserve your favorite seats, manage tickets, and review your transactions in one place.'],
-    ['Chọn ghế và đồ ăn trước khi đến rạp.', 'Choose your seats and snacks before arriving.'],
-    ['Lịch sử hóa đơn và thông tin vé luôn sẵn sàng.', 'Your booking history and ticket details, always available.'],
-    ['Đăng ký nhanh bằng số điện thoại.', 'Sign up quickly with your phone number.'],
-    ['PTIT Cinema · Tài khoản được bảo vệ bằng mã hóa mật khẩu', 'PTIT Cinema · Your account is protected with password hashing'],
-    ['Khám phá · Đặt vé · Trải nghiệm', 'Discover · Book · Enjoy'],
-    ['Rạp phim trong tầm tay', 'Cinema within reach'],
     ['Đăng nhập hoặc đăng ký', 'Sign in or create an account'],
-    ['Tạo tài khoản khách hàng', 'Create a customer account'],
-    ['Đăng ký bằng số điện thoại và mật khẩu, không cần email hay mã xác minh.', 'Sign up with a phone number and password; no email or verification code is needed.'],
-    ['Chào mừng trở lại', 'Welcome back'],
-    ['Khách hàng đăng nhập bằng số điện thoại; nhân viên dùng email được cấp.', 'Customers sign in with a phone number; staff use their assigned email.'],
     ['Số điện thoại hoặc email nhân viên', 'Phone number or staff email'],
     ['Số điện thoại đăng nhập', 'Sign-in phone number'],
     ['Số điện thoại là tên đăng nhập của tài khoản khách hàng.', 'Your phone number is the username for your customer account.'],
@@ -27,13 +23,13 @@
     ['Đăng nhập an toàn', 'Sign in securely'],
     ['Tạo tài khoản', 'Create account'],
     ['Đăng nhập', 'Sign in'],
+    ['Đăng ký', 'Sign up'],
     ['Họ và tên', 'Full name'],
     ['Số điện thoại', 'Phone number'],
     ['Mật khẩu', 'Password'],
     ['Email', 'Email'],
     ['Lịch chiếu', 'Showtimes'],
     ['Xem lịch chiếu', 'View showtimes'],
-    ['Không chia sẻ mật khẩu. Nhân viên và quản trị viên được cấp quyền riêng, không đăng ký qua biểu mẫu khách hàng.', 'Never share your password. Staff and administrators receive separate accounts and cannot register through the customer form.'],
     ['Vui lòng nhập số điện thoại/email và mật khẩu.', 'Enter your phone number/staff email and password.'],
     ['Số điện thoại/email hoặc mật khẩu không chính xác.', 'The phone number/staff email or password is incorrect.'],
     ['Tài khoản nhân viên chưa được kích hoạt. Vui lòng liên hệ quản trị viên.', 'This staff account is not activated. Contact an administrator.'],
@@ -356,7 +352,8 @@
     language: 'ptit-cinema-language'
   };
   let language = localStorage.getItem(caches.language) || 'vi';
-  let theme = localStorage.getItem(caches.theme) || 'dark';
+  const fixedTheme = document.documentElement.dataset.fixedTheme;
+  let theme = fixedTheme || localStorage.getItem(caches.theme) || (document.body.classList.contains('admin-shell') ? 'light' : 'dark');
 
   function translate(value, targetLanguage) {
     const replacements = targetLanguage === 'en' ? toEnglish : toVietnamese;
@@ -364,6 +361,7 @@
   }
 
   function addControls() {
+    const preferencesHost = document.querySelector('[data-ui-preferences]');
     const header = document.querySelector('header');
     const controls = document.createElement('div');
     controls.className = 'ui-preferences';
@@ -373,9 +371,11 @@
         <option value="vi">Tiếng Việt</option>
         <option value="en">English</option>
       </select>
-      <button id="ui-theme" type="button"></button>`;
+      ${fixedTheme ? '' : '<button id="ui-theme" type="button"></button>'}`;
 
-    if (!header) {
+    if (preferencesHost) {
+      preferencesHost.append(controls);
+    } else if (!header) {
       controls.classList.add('ui-preferences-floating');
       document.body.append(controls);
     } else {
@@ -393,7 +393,7 @@
       localStorage.setItem(caches.language, language);
       applyLanguage();
     });
-    themeButton.addEventListener('click', () => {
+    themeButton?.addEventListener('click', () => {
       theme = theme === 'dark' ? 'light' : 'dark';
       localStorage.setItem(caches.theme, theme);
       applyTheme();

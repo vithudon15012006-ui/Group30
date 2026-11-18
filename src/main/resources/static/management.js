@@ -121,12 +121,18 @@ function resetForm() {
   for (const input of inputs.values()) input.readOnly = false;
   updateSeatOptions();
   el("save").textContent = "Thêm";
+  updateSaveState();
+}
+function updateSaveState() {
+  el("save").disabled = busy || [...inputs.values()].some(input =>
+    !input.checkValidity() || (input.required && !input.value.trim()));
 }
 function buildForm() {
   inputs.clear();
   el("fields").replaceChildren();
   el("add").hidden = !canEdit();
   if (canEdit()) spec.cols.forEach(([key, label, type = "text"], index) => {
+    if (spec.slug === "phim" && key === "doanhThuUsd") return;
     if (spec.slug === "suat-chieu" && index === 0) return;
     const field = make("label", label), input = make(key === "HinhThucThanhToan" ? "select" : "input");
     if (input.tagName === "SELECT") {
@@ -139,7 +145,7 @@ function buildForm() {
       if (type === "time" || type === "datetime-local") input.step = "1";
       if (index === 0) input.pattern = "[A-Za-z0-9_\\-]+";
     }
-    input.required = index < 2 || (required[spec.slug] ?? []).includes(key);
+    input.required = spec.slug === "phim" || index < 2 || (required[spec.slug] ?? []).includes(key);
     field.append(input); el("fields").append(field); inputs.set(key, input);
     if (index > 0 && references[key]) attachChoices(key, input, field);
   });
@@ -166,6 +172,7 @@ function showEdit(row) {
   if (keyInput) keyInput.readOnly = true;
   updateSeatOptions();
   el("save").textContent = "Cập nhật";
+  updateSaveState();
   el("editor-title").textContent = "Sửa " + spec.label + " · " + editId;
   modalError("edit-message", "");
   el("editor").showModal();
@@ -283,12 +290,12 @@ async function mutate(method, rowId, body) {
     if (target === spec) { resetForm(); await refresh(deleting ? "Đã xóa." : "Đã lưu."); }
   } catch (err) {
     modalError(errorId, err.message);
-  } finally { busy = false; buttons.forEach(b => b.disabled = false); }
+  } finally { busy = false; buttons.forEach(b => b.disabled = false); updateSaveState(); }
 }
 function deleteRow(row) {
   pendingDelete = row[spec.cols[0][0]];
   el("delete-description").textContent = "Bản ghi " + pendingDelete + " trong mục " + spec.label
-    + " sẽ bị xóa khỏi dữ liệu local. Bạn không thể hoàn tác thao tác này trên trang.";
+    + " sẽ bị xóa khỏi cơ sở dữ liệu. Bạn không thể hoàn tác thao tác này trên trang.";
   modalError("delete-message", "");
   el("delete-dialog").showModal();
 }
@@ -298,26 +305,23 @@ for (const [i, s] of specs.entries()) {
 catalog.addEventListener("change", () => {
   spec = specs[Number(catalog.value)]; data = []; page = 0; search.value = "";
   el("table-title").textContent = spec.label;
-  const workflow = {
-    "suat-chieu": ["/QuanTriLichChieu.html", "Quản lý suất chiếu và giá vé"],
-    "ve": ["/QuanTriThanhToan.html", "Quản lý giao dịch và vé"],
-    "hoa-don": ["/QuanTriThanhToan.html", "Quản lý thanh toán"]
-  }[spec.slug];
-  el("catalog-workflow").hidden = !workflow || !isAdmin;
-  if (workflow) {
-    el("catalog-link").href = workflow[0];
-    el("catalog-link").textContent = workflow[1];
-  }
   buildForm(); render(); refresh();
 });
 form.addEventListener("submit", e => {
   e.preventDefault();
+  updateSaveState();
+  if (el("save").disabled) return;
   const body = Object.fromEntries([...inputs].map(([key, input]) => [
     spec.slug === "suat-chieu" ? key[0].toLowerCase() + key.slice(1) : key,
     input.value.trim() === "" ? null : input.type === "number" ? Number(input.value) : input.value.trim()
   ]));
+  if (spec.slug === "phim") {
+    body.doanhThuUsd = editId === null ? null : data.find(row => row.maPhim === editId)?.doanhThuUsd ?? null;
+  }
   mutate(editId === null ? "POST" : "PUT", editId, body);
 });
+form.addEventListener("input", updateSaveState);
+form.addEventListener("change", updateSaveState);
 el("add").addEventListener("click", showAdd);
 el("cancel-edit").addEventListener("click", () => el("editor").close());
 el("cancel-delete").addEventListener("click", () => el("delete-dialog").close());
@@ -342,7 +346,7 @@ async function initialize() {
       return;
     }
     isAdmin = user.vaiTro === "ADMIN";
-    el("admin-home").hidden = !isAdmin;
+    document.querySelectorAll("[data-admin-only]").forEach(link => { link.hidden = !isAdmin; });
     el("logout").hidden = false;
     buildForm(); render(); await refresh();
   } catch (error) {
